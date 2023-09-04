@@ -188,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         const Padding(
                           padding: EdgeInsets.all(8.0),
-                          child: Text("Some long name of the company"),
+                          // child: Text("Some long name of the company"),
                         ),
                         Card(
                           color: textBackground,
