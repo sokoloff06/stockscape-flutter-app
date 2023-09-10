@@ -22,7 +22,7 @@ class StockDetailScreen extends StatelessWidget {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             final Map<String, dynamic>? quote = snapshot.data;
-            final double currentPrice = quote?['c'];
+            final double currentPrice = double.parse(quote!['c'].toString());
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(

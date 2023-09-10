@@ -59,10 +59,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
                 suggestionsBuilder: (BuildContext context, searchController) {
+                  var text = searchController.text;
+                  List<Widget> widgets = [];
+                  if (text.isEmpty){
+                    return widgets;
+                  }
                   var apiResponse =
                       apiService.fetchSearchResults(searchController.text);
                   return apiResponse.then((suggestionsData) {
-                    List<Widget> widgets = [];
                     var matches = suggestionsData['results'];
                     matches?.forEach((match) {
                       var symbol = match['symbol'];

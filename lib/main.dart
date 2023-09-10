@@ -1,10 +1,10 @@
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stockscape/screens/home_screen.dart';
 import 'package:stockscape/screens/stock_detail_screen.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'firebase_options.dart';
 
 void main() {
@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     initFirebase();
+    initAppsFlyer();
     return MaterialApp(
       debugShowCheckedModeBanner:false,
       title: 'Stock Market App',
@@ -48,5 +49,23 @@ class MyApp extends StatelessWidget {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
+  }
+
+  void initAppsFlyer() {
+    const afDevKey = 'LadcyeEpUmDJAMWDYEsZfH';
+    const appId = '6464097305';
+
+    AppsFlyerOptions appsFlyerOptions = AppsFlyerOptions (
+        afDevKey: afDevKey,
+        appId: appId,
+        showDebug: true,
+        timeToWaitForATTUserAuthorization: 50, // for iOS 14.5
+        // appInviteOneLink: oneLinkID, // Optional field
+        // disableAdvertisingIdentifier: false, // Optional field
+        // disableCollectASA: false
+    ); // Optional field
+
+    AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
+    appsflyerSdk.initSdk();
   }
 }
