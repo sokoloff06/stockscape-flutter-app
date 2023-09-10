@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:stockscape/analytics.dart';
 import 'package:stockscape/api_service.dart';
 import 'package:stockscape/screens/stock_detail_screen.dart';
 
@@ -257,6 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 void _navigateToDetailScreen(BuildContext context, String symbol) {
+  Analytics.logEvent("Details", Map.of({"symbol": symbol}));
   Navigator.push(
     context,
     MaterialPageRoute(
