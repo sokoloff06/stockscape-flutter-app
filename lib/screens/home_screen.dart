@@ -14,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final APIService apiService =
-      APIService(finhubApiKey: 'cjp2419r01qj85r47bhgcjp2419r01qj85r47bi0');
+      APIService('cjp2419r01qj85r47bhgcjp2419r01qj85r47bi0');
 
   int _currentIndex = 0; // Index of the selected tab
 
@@ -58,16 +58,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     leading: const Icon(Icons.search),
                   );
                 },
-                suggestionsBuilder: (BuildContext context, searchController) {
+                suggestionsBuilder:
+                    (BuildContext context, searchController) async {
                   var text = searchController.text;
                   List<Widget> widgets = [];
-                  if (text.isEmpty){
+                  if (text.isEmpty) {
                     return widgets;
                   }
-                  var apiResponse =
-                      apiService.fetchSearchResults(searchController.text);
-                  return apiResponse.then((suggestionsData) {
-                    var matches = suggestionsData['results'];
+                  Map<String, dynamic> apiResponse;
+                  try {
+                    apiResponse = await apiService
+                        .fetchSearchResults(searchController.text);
+                    var matches = apiResponse['results'];
                     matches?.forEach((match) {
                       var symbol = match['symbol'];
                       widgets.add(ListTile(
@@ -79,7 +81,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ));
                     });
                     return widgets;
-                  });
+                  } on Exception catch (_, e) {
+                    widgets.add(const ListTile(
+                      title: Text(
+                          "Can't find matching symbols, please check your input!"),
+                    ));
+                    return widgets;
+                  }
                 },
               ),
             ),

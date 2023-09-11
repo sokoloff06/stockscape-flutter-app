@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stockscape/api_service.dart';
 
 class StockDetailScreen extends StatelessWidget {
-  final APIService apiService = APIService(finhubApiKey: 'cjp2419r01qj85r47bhgcjp2419r01qj85r47bi0');
+  final APIService apiService = APIService('cjp2419r01qj85r47bhgcjp2419r01qj85r47bi0');
   final String symbol;
 
   StockDetailScreen(this.symbol);
