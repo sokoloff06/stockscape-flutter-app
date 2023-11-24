@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:stockscape/api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stockscape/main.dart';
 
-class StockDetailScreen extends StatelessWidget {
-  final APIService apiService = APIService('cjp2419r01qj85r47bhgcjp2419r01qj85r47bi0');
+class StockDetailScreen extends StatefulWidget {
   final String symbol;
 
   StockDetailScreen(this.symbol);
@@ -14,7 +14,7 @@ class StockDetailScreen extends StatelessWidget {
         title: const Text('Stock Detail'),
       ),
       body: FutureBuilder(
-        future: apiService.fetchStockData(symbol),
+        future: MyApp.apiService.fetchStockData(widget.symbol),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -39,7 +39,8 @@ class StockDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'Price: \$${currentPrice.toStringAsFixed(2)}', // Display stock price
+                    'Price: \$${currentPrice.toStringAsFixed(2)}',
+                    // Display stock price
                     style: const TextStyle(fontSize: 18),
                   ),
                   // Add more stock information and charts here

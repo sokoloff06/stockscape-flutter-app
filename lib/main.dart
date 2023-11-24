@@ -3,16 +3,28 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockscape/screens/home_screen.dart';
 import 'package:stockscape/screens/stock_detail_screen.dart';
+import 'api_service.dart';
 import 'firebase_options.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+  static final APIService apiService =
+  APIService('cjp2419r01qj85r47bhgcjp2419r01qj85r47bi0', 'iEzh6dNrbIfRncuAZdMRQ71fCLkMlD1M');
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+
+
+}
+
+class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +71,7 @@ class MyApp extends StatelessWidget {
         afDevKey: afDevKey,
         appId: appId,
         showDebug: true,
-        timeToWaitForATTUserAuthorization: 50, // for iOS 14.5
+        timeToWaitForATTUserAuthorization: 15, // for iOS 14.5
         // appInviteOneLink: oneLinkID, // Optional field
         // disableAdvertisingIdentifier: false, // Optional field
         // disableCollectASA: false

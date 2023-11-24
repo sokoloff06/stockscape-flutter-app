@@ -3,9 +3,10 @@ import 'dart:io';
 
 class APIService {
   final String finhubApiKey;
+  final String fmpKey;
   late HttpClient client;
 
-  APIService(this.finhubApiKey) {
+  APIService(this.finhubApiKey, this.fmpKey) {
     HttpClient.enableTimelineLogging = true;
     client = HttpClient();
   }
@@ -23,17 +24,45 @@ class APIService {
     }
   }
 
-  Future<Map<String, dynamic>> fetchTopGainersLosers() async {
+  Future<List<dynamic>> fetchTopGainers() async {
     final response = await get(
       Uri.parse(
-        'https://www.alphavantage.co/query?function=TOP_GAINERS_LOSERS&apikey=demo',
+        'https://financialmodelingprep.com/api/v3/stock_market/gainers?apikey=$fmpKey',
       ),
     );
 
     if (response.statusCode == 200) {
       return json.decode(response.stringData);
     } else {
-      throw Exception('Failed to fetch top gainers and losers');
+      throw Exception('Failed to fetch top gainers');
+    }
+  }
+
+  Future<List<dynamic>> fetchTopLosers() async {
+    final response = await get(
+      Uri.parse(
+        'https://financialmodelingprep.com/api/v3/stock_market/losers?apikey=$fmpKey',
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.stringData);
+    } else {
+      throw Exception('Failed to fetch top losers');
+    }
+  }
+
+  Future<List<dynamic>> fetchTopActive() async {
+    final response = await get(
+      Uri.parse(
+        'https://financialmodelingprep.com/api/v3/stock_market/actives?apikey=$fmpKey',
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.stringData);
+    } else {
+      throw Exception('Failed to fetch top actives');
     }
   }
 
