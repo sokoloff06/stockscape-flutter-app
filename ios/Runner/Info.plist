@@ -47,6 +47,8 @@
 	<true/>
 	<key>NSAdvertisingAttributionReportEndpoint</key>
 	<string>https://appsflyer-skadnetwork.com/</string>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 </dict>
