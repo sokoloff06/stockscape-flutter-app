@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:stockscape/analytics.dart';
-import 'package:stockscape/api_service.dart';
-import 'package:stockscape/screens/stock_detail_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:stockscape/main.dart';
+import 'package:stockscape/ui/stock_detail_screen.dart';
+
+import '../models/favorites.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,24 +15,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final APIService apiService =
-      APIService('cjp2419r01qj85r47bhgcjp2419r01qj85r47bi0');
-
   int _currentIndex = 0; // Index of the selected tab
+  late Future<List<dynamic>> topGainersFuture;
+  late Future<List<dynamic>> topLosersFuture;
+  late Future<List<dynamic>> topActiveFuture;
 
-  late Future<Map<String, dynamic>> topGainersLosersFuture;
-
-  // late Future<Map<String, dynamic>> searchResultsFuture;
-  late FutureOr<Map<String, dynamic>> searchListFuture;
   var searchController = SearchController();
 
   @override
   void initState() {
     super.initState();
-    topGainersLosersFuture = apiService.fetchTopGainersLosers();
-    // searchController.addListener(() {
-    //   _loadAndNavigateToSearchTab(searchController);
-    // });
+    topGainersFuture = MyApp.apiService.fetchTopGainers();
+    topLosersFuture = MyApp.apiService.fetchTopLosers();
+    topActiveFuture = MyApp.apiService.fetchTopActive();
   }
 
   @override
@@ -46,7 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: SizedBox(
               height: 50,
               child: SearchAnchor(
-                builder: (BuildContext context, searchController) {
+                builder:
+                    (BuildContext context, SearchController searchController) {
                   return SearchBar(
                     onTap: () {
                       searchController.openView();
@@ -67,8 +65,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   Map<String, dynamic> apiResponse;
                   try {
-                    apiResponse = await apiService
+                    var futureApiResponse = MyApp.apiService
                         .fetchSearchResults(searchController.text);
+                    // futureApiResponse.ignore();
+                    apiResponse = await futureApiResponse;
                     var matches = apiResponse['results'];
                     matches?.forEach((match) {
                       var symbol = match['symbol'];
@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ));
                     });
                     return widgets;
-                  } on Exception catch (_, e) {
+                  } on Exception catch (_) {
                     widgets.add(const ListTile(
                       title: Text(
                           "Can't find matching symbols, please check your input!"),
@@ -116,25 +116,27 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.swap_horiz),
             label: 'Top Actively Traded in US',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.search),
-          //   label: 'Search',
-          // ),
         ],
       ),
     );
   }
 
   Widget _buildTabContent() {
-    Future<Map<String, dynamic>> futureData;
-    if (_currentIndex >= 0 && _currentIndex <= 2) {
-      futureData = topGainersLosersFuture;
-      // } else if (_currentIndex == 3) {
-      //   futureData = searchListFuture;
-    } else {
-      return const Center(child: Text('Invalid Tab Index'));
+    Future<List<dynamic>> futureData;
+    switch (_currentIndex) {
+      case 0:
+        futureData = topGainersFuture;
+        break;
+      case 1:
+        futureData = topLosersFuture;
+        break;
+      case 2:
+        futureData = topActiveFuture;
+        break;
+      default:
+        return const Center(child: Text('Invalid Tab Index'));
     }
-    return FutureBuilder<Map<String, dynamic>>(
+    return FutureBuilder<List<dynamic>>(
       future: futureData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -149,27 +151,18 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildTopGainersLosers(List<dynamic> stocks, String lastUpdated) {
+  Widget _buildTopGainersLosers(List<dynamic> stocks) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            "As of $lastUpdated\nClick on the symbol to check real-time price",
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.labelSmall,
-          ),
-        ),
         Expanded(
           child: ListView.builder(
               itemCount: stocks.length,
               itemBuilder: (context, index) {
                 final stock = stocks[index];
-                final changeString = stock['change_percentage'].toString();
+                final changeString = stock['changesPercentage'].toString();
                 Color textBackground;
                 Color textColor;
-                var change = double.parse(
-                    changeString.substring(0, changeString.length - 1));
+                var change = double.parse(changeString);
                 if (change > 0) {
                   textBackground = Colors.green;
                   textColor = Colors.white;
@@ -188,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Card(
                                 child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(stock['ticker']),
+                              child: Text(stock['symbol']),
                             )),
                           ),
                           Padding(
@@ -203,12 +196,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: EdgeInsets.all(8.0),
                           // child: Text("Some long name of the company"),
                         ),
+                        FavoritesToggle(stock['symbol']),
+                        const Spacer(),
                         Card(
                           color: textBackground,
                           child: Padding(
                             padding: const EdgeInsets.all(5),
                             child: Text(
-                              "${stock['change_percentage']}",
+                              "${stock['changesPercentage']}",
                               style: TextStyle(
                                 color: textColor,
                               ),
@@ -218,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     onTap: () {
-                      _navigateToDetailScreen(context, stock['ticker']);
+                      _navigateToDetailScreen(context, stock['symbol']);
                     });
               }),
         ),
@@ -226,55 +221,43 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // _loadAndNavigateToSearchTab(TextEditingController textController) {
-  //   var query = textController.text;
-  //   if (query.isNotEmpty) {
-  //     setState(() {
-  //       _currentIndex = 3;
-  //       searchResultsFuture =
-  //           apiService.fetchSearchResults(textController.text);
-  //     });
-  //   }
-  // }
-
-  // Widget _buildSearchResultsList(List stocksToDisplay) {
-  //   return Expanded(
-  //     child: ListView.builder(
-  //         itemCount: stocksToDisplay.length,
-  //         itemBuilder: (context, index) {
-  //           return ListTile(
-  //             title: Text(stocksToDisplay[index]['1. symbol']),
-  //           );
-  //         }),
-  //   );
-  // }
-
-  Widget _buildStockList(Map<String, dynamic> stocksData) {
-    if (_currentIndex == 0) {
-      return _buildTopGainersLosers(stocksData['top_gainers'] as List<dynamic>,
-          stocksData["last_updated"]);
-    } else if (_currentIndex == 1) {
-      return _buildTopGainersLosers(stocksData['top_losers'] as List<dynamic>,
-          stocksData["last_updated"]);
-    } else if (_currentIndex == 2) {
-      return _buildTopGainersLosers(
-          stocksData['most_actively_traded'] as List<dynamic>,
-          stocksData["last_updated"]);
-      // } else if (_currentIndex == 3) {
-      //   return _buildSearchResultsList(
-      //       stocksData['results'] as List<dynamic>);
+  Widget _buildStockList(List<dynamic> stocksData) {
+    if (_currentIndex >= 0 && _currentIndex <= 2) {
+      return _buildTopGainersLosers(stocksData);
     } else {
       return const Center(child: Text('Invalid Tab Index'));
     }
   }
-}
 
-void _navigateToDetailScreen(BuildContext context, String symbol) {
-  Analytics.logEvent("Details", Map.of({"symbol": symbol}));
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => StockDetailScreen(symbol),
-    ),
-  );
+  void _navigateToDetailScreen(BuildContext context, String symbol) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => StockDetailScreen(symbol),
+      ),
+    );
+  }
+
+  Widget FavoritesToggle(symbol) {
+    return Consumer<FavoritesModel>(
+      builder: (
+        BuildContext context,
+        FavoritesModel favoritesModel,
+        Widget? child,
+      ) {
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              favoritesModel.isFavorite(symbol)
+                  ? favoritesModel.removeFromFavorites(symbol)
+                  : favoritesModel.addToFavorites(symbol);
+            });
+          },
+          child: Icon(favoritesModel.isFavorite(symbol)
+              ? Icons.favorite
+              : Icons.favorite_border),
+        );
+      },
+    );
+  }
 }
