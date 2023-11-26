@@ -24,6 +24,6 @@ brew install cocoapods
 cd ios && pod install # run `pod install` in the `ios` directory.
 
 # Ensure write permissions for flutter build process
-chown -R $(whoami) /Volumes/workspace/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Runner/BuildProductsPath/Release-iphoneos/.last_build_id
+chown -R $(whoami) /Volumes/workspace/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Runner/BuildProductsPath/Release-iphoneos/
 
 exit 0
