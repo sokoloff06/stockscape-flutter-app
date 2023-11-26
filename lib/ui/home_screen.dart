@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'package:stockscape/analytics.dart';
 import 'package:stockscape/main.dart';
-import 'package:stockscape/screens/stock_detail_screen.dart';
+import 'package:stockscape/ui/stock_detail_screen.dart';
+
+import '../models/favorites.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -193,6 +195,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: EdgeInsets.all(8.0),
                           // child: Text("Some long name of the company"),
                         ),
+                        FavoritesToggle(stock['symbol']),
+                        const Spacer(),
                         Card(
                           color: textBackground,
                           child: Padding(
@@ -231,6 +235,29 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(
         builder: (context) => StockDetailScreen(symbol),
       ),
+    );
+  }
+
+  Widget FavoritesToggle(symbol) {
+    return Consumer<FavoritesModel>(
+      builder: (
+        BuildContext context,
+        FavoritesModel favoritesModel,
+        Widget? child,
+      ) {
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              favoritesModel.isFavorite(symbol)
+                  ? favoritesModel.removeFromFavorites(symbol)
+                  : favoritesModel.addToFavorites(symbol);
+            });
+          },
+          child: Icon(favoritesModel.isFavorite(symbol)
+              ? Icons.favorite
+              : Icons.favorite_border),
+        );
+      },
     );
   }
 }

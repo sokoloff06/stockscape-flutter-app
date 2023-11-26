@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stockscape/screens/home_screen.dart';
-import 'package:stockscape/screens/stock_detail_screen.dart';
+import 'package:stockscape/ui/home_screen.dart';
+import 'package:stockscape/ui/stock_detail_screen.dart';
 
 import 'api_service.dart';
 import 'firebase_options.dart';

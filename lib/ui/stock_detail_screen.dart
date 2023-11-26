@@ -51,25 +51,8 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
                         style:
                             const TextStyle(fontSize: 18, color: Colors.grey),
                       ),
-                      Consumer<FavoritesModel>(
-                        builder: (BuildContext context,
-                            FavoritesModel favoritesModel, Widget? child) {
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                favoritesModel.isFavorite(widget.symbol)
-                                    ? favoritesModel
-                                        .removeFromFavorites(widget.symbol)
-                                    : favoritesModel
-                                        .addToFavorites(widget.symbol);
-                              });
-                            },
-                            child: Icon(favoritesModel.isFavorite(widget.symbol)
-                                ? Icons.favorite
-                                : Icons.favorite_border),
-                          );
-                        },
-                      ),
+                      const Spacer(),
+                      FavoritesToggle(widget.symbol),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -85,6 +68,29 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
           }
         },
       ),
+    );
+  }
+
+  // TODO: Deduplicate
+  Widget FavoritesToggle(symbol) {
+    return Consumer<FavoritesModel>(
+      builder: (BuildContext context,
+          FavoritesModel favoritesModel, Widget? child,) {
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              favoritesModel.isFavorite(symbol)
+                  ? favoritesModel
+                  .removeFromFavorites(symbol)
+                  : favoritesModel
+                  .addToFavorites(symbol);
+            });
+          },
+          child: Icon(favoritesModel.isFavorite(symbol)
+              ? Icons.favorite
+              : Icons.favorite_border),
+        );
+      },
     );
   }
 }
