@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:stockscape/analytics.dart';
 import 'package:stockscape/main.dart';
 import 'package:stockscape/ui/stock_detail_screen.dart';
 
@@ -21,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<dynamic>> topLosersFuture;
   late Future<List<dynamic>> topActiveFuture;
 
-  late FutureOr<Map<String, dynamic>> searchListFuture;
   var searchController = SearchController();
 
   @override
@@ -45,7 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: SizedBox(
               height: 50,
               child: SearchAnchor(
-                builder: (BuildContext context, searchController) {
+                builder:
+                    (BuildContext context, SearchController searchController) {
                   return SearchBar(
                     onTap: () {
                       searchController.openView();
@@ -66,8 +65,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   Map<String, dynamic> apiResponse;
                   try {
-                    apiResponse = await MyApp.apiService
+                    var futureApiResponse = MyApp.apiService
                         .fetchSearchResults(searchController.text);
+                    // futureApiResponse.ignore();
+                    apiResponse = await futureApiResponse;
                     var matches = apiResponse['results'];
                     matches?.forEach((match) {
                       var symbol = match['symbol'];
@@ -80,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ));
                     });
                     return widgets;
-                  } on Exception catch (_, e) {
+                  } on Exception catch (_) {
                     widgets.add(const ListTile(
                       title: Text(
                           "Can't find matching symbols, please check your input!"),
@@ -229,7 +230,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _navigateToDetailScreen(BuildContext context, String symbol) {
-    Analytics.logEvent("Details", Map.of({"symbol": symbol}));
     Navigator.push(
       context,
       MaterialPageRoute(

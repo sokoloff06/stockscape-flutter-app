@@ -5,7 +5,7 @@ class FavoritesModel extends ChangeNotifier {
   static const String prefsKey = 'favs';
   static const String symbolDataKey = 'isFavorite';
 
-  SharedPreferences _prefs;
+  final SharedPreferences _prefs;
   Set<String> _favs = <String>{};
 
   FavoritesModel(this._prefs) {

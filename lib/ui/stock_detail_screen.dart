@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockscape/main.dart';
@@ -21,6 +22,14 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
   void initState() {
     super.initState();
     stockDataFuture = MyApp.apiService.fetchStockData(widget.symbol);
+    stockDataFuture.then((data) {
+      return FirebaseAnalytics.instance.logViewItem(
+          currency: "USD",
+          value: double.parse(data['c'].toString()),
+          items: <AnalyticsEventItem>[
+            AnalyticsEventItem(itemName: widget.symbol)
+          ]);
+    });
   }
 
   @override
@@ -74,16 +83,17 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
   // TODO: Deduplicate
   Widget FavoritesToggle(symbol) {
     return Consumer<FavoritesModel>(
-      builder: (BuildContext context,
-          FavoritesModel favoritesModel, Widget? child,) {
+      builder: (
+        BuildContext context,
+        FavoritesModel favoritesModel,
+        Widget? child,
+      ) {
         return GestureDetector(
           onTap: () {
             setState(() {
               favoritesModel.isFavorite(symbol)
-                  ? favoritesModel
-                  .removeFromFavorites(symbol)
-                  : favoritesModel
-                  .addToFavorites(symbol);
+                  ? favoritesModel.removeFromFavorites(symbol)
+                  : favoritesModel.addToFavorites(symbol);
             });
           },
           child: Icon(favoritesModel.isFavorite(symbol)
