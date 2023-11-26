@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 import 'package:stockscape/main.dart';
+import 'package:stockscape/models/favorites.dart';
 
 class StockDetailScreen extends StatefulWidget {
   final String symbol;
 
-  StockDetailScreen(this.symbol);
+  const StockDetailScreen(this.symbol, {super.key});
+
+  @override
+  State<StockDetailScreen> createState() => _StockDetailScreenState();
+}
+
+class _StockDetailScreenState extends State<StockDetailScreen> {
+  late Future<Map<String, dynamic>> stockDataFuture;
+
+  _StockDetailScreenState();
+
+  @override
+  void initState() {
+    super.initState();
+    stockDataFuture = MyApp.apiService.fetchStockData(widget.symbol);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +30,7 @@ class StockDetailScreen extends StatefulWidget {
         title: const Text('Stock Detail'),
       ),
       body: FutureBuilder(
-        future: MyApp.apiService.fetchStockData(widget.symbol),
+        future: stockDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -28,14 +44,33 @@ class StockDetailScreen extends StatefulWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Text(
-                  //   stock?['name'], // Display stock name
-                  //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  // ),
-                  // SizedBox(height: 10),
-                  Text(
-                    symbol, // Display stock symbol
-                    style: const TextStyle(fontSize: 18, color: Colors.grey),
+                  Row(
+                    children: [
+                      Text(
+                        widget.symbol, // Display stock symbol
+                        style:
+                            const TextStyle(fontSize: 18, color: Colors.grey),
+                      ),
+                      Consumer<FavoritesModel>(
+                        builder: (BuildContext context,
+                            FavoritesModel favoritesModel, Widget? child) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                favoritesModel.isFavorite(widget.symbol)
+                                    ? favoritesModel
+                                        .removeFromFavorites(widget.symbol)
+                                    : favoritesModel
+                                        .addToFavorites(widget.symbol);
+                              });
+                            },
+                            child: Icon(favoritesModel.isFavorite(widget.symbol)
+                                ? Icons.favorite
+                                : Icons.favorite_border),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 20),
                   Text(

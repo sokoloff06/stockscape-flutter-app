@@ -1,15 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:stockscape/analytics.dart';
 import 'package:stockscape/main.dart';
 import 'package:stockscape/screens/stock_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  final SharedPreferences? prefs;
-
-  const HomeScreen(this.prefs, {super.key});
+  const HomeScreen({super.key});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -17,12 +15,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0; // Index of the selected tab
-
   late Future<List<dynamic>> topGainersFuture;
   late Future<List<dynamic>> topLosersFuture;
   late Future<List<dynamic>> topActiveFuture;
 
-  // late Future<Map<String, dynamic>> searchResultsFuture;
   late FutureOr<Map<String, dynamic>> searchListFuture;
   var searchController = SearchController();
 
@@ -32,9 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
     topGainersFuture = MyApp.apiService.fetchTopGainers();
     topLosersFuture = MyApp.apiService.fetchTopLosers();
     topActiveFuture = MyApp.apiService.fetchTopActive();
-    // searchController.addListener(() {
-    //   _loadAndNavigateToSearchTab(searchController);
-    // });
   }
 
   @override
@@ -120,10 +113,6 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.swap_horiz),
             label: 'Top Actively Traded in US',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.search),
-          //   label: 'Search',
-          // ),
         ],
       ),
     );
@@ -170,8 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 final changeString = stock['changesPercentage'].toString();
                 Color textBackground;
                 Color textColor;
-                var change = double.parse(
-                    changeString);
+                var change = double.parse(changeString);
                 if (change > 0) {
                   textBackground = Colors.green;
                   textColor = Colors.white;
@@ -228,29 +216,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // _loadAndNavigateToSearchTab(TextEditingController textController) {
-  //   var query = textController.text;
-  //   if (query.isNotEmpty) {
-  //     setState(() {
-  //       _currentIndex = 3;
-  //       searchResultsFuture =
-  //           apiService.fetchSearchResults(textController.text);
-  //     });
-  //   }
-  // }
-
-  // Widget _buildSearchResultsList(List stocksToDisplay) {
-  //   return Expanded(
-  //     child: ListView.builder(
-  //         itemCount: stocksToDisplay.length,
-  //         itemBuilder: (context, index) {
-  //           return ListTile(
-  //             title: Text(stocksToDisplay[index]['1. symbol']),
-  //           );
-  //         }),
-  //   );
-  // }
-
   Widget _buildStockList(List<dynamic> stocksData) {
     if (_currentIndex >= 0 && _currentIndex <= 2) {
       return _buildTopGainersLosers(stocksData);
@@ -264,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => StockDetailScreen(symbol, widget.prefs),
+        builder: (context) => StockDetailScreen(symbol),
       ),
     );
   }
