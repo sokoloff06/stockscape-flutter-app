@@ -203,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text("\$${stock['price']}"),
+                            child: Text("\$${stock['price'].toStringAsPrecision(3)}"),
                           ),
                         ]),
                     subtitle: Row(
@@ -220,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(5),
                             child: Text(
-                              "$change %",
+                              "${change.toStringAsPrecision(3)} %",
                               style: TextStyle(
                                 color: textColor,
                               ),
