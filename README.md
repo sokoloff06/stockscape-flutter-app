@@ -14,7 +14,7 @@ A Sample Flutter app I've created in order to:
 
 # Screenshots
 
-![Simulator Screenshot - iPhone 8 Plus - 2023-11-27 at 18.20.45.png](release-assets%2Fscreenshots%2Fios%2F5.5%2FSimulator%20Screenshot%20-%20iPhone%208%20Plus%20-%202023-11-27%20at%2018.20.45.png)
-![Simulator Screenshot - iPhone 8 Plus - 2023-11-27 at 18.20.49.png](release-assets%2Fscreenshots%2Fios%2F5.5%2FSimulator%20Screenshot%20-%20iPhone%208%20Plus%20-%202023-11-27%20at%2018.20.49.png)
-![Simulator Screenshot - iPhone 8 Plus - 2023-11-27 at 18.20.53.png](release-assets%2Fscreenshots%2Fios%2F5.5%2FSimulator%20Screenshot%20-%20iPhone%208%20Plus%20-%202023-11-27%20at%2018.20.53.png)
-![Simulator Screenshot - iPhone 8 Plus - 2023-11-27 at 18.21.15.png](release-assets%2Fscreenshots%2Fios%2F5.5%2FSimulator%20Screenshot%20-%20iPhone%208%20Plus%20-%202023-11-27%20at%2018.21.15.png)
+<img src="release-assets%2Fscreenshots%2Fios%2F5.5%2FSimulator%20Screenshot%20-%20iPhone%208%20Plus%20-%202023-11-27%20at%2018.20.45.png" alt="drawing" width="300px"/>
+<img src="release-assets%2Fscreenshots%2Fios%2F5.5%2FSimulator%20Screenshot%20-%20iPhone%208%20Plus%20-%202023-11-27%20at%2018.20.49.png" alt="drawing" width="300px"/>
+<img src="release-assets%2Fscreenshots%2Fios%2F5.5%2FSimulator%20Screenshot%20-%20iPhone%208%20Plus%20-%202023-11-27%20at%2018.20.53.png" alt="drawing" width="300px"/>
+<img src="release-assets%2Fscreenshots%2Fios%2F5.5%2FSimulator%20Screenshot%20-%20iPhone%208%20Plus%20-%202023-11-27%20at%2018.21.15.png" alt="drawing" width="300px"/>
