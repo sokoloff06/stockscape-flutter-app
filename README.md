@@ -10,7 +10,7 @@ A Sample Flutter app I've created in order to:
 
 - https://finnhub.io for individual stock data
 - https://financialmodelingprep.com for actives/gainers/losers and favorites
-- owned cloud function for search
+- [Ticker Search API](https://github.com/yashwanth2804/TickerSymbol) hosted in GCP for search
 
 # Screenshots
 
