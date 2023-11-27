@@ -87,6 +87,20 @@ class APIService {
     final stringData = await response.transform(utf8.decoder).join();
     return APIResponse(statusCode: response.statusCode, stringData: stringData);
   }
+
+  Future<List<dynamic>> fetchFavorites(Set<String> symbols) async {
+    String path = symbols.toString().substring(1, symbols.toString().length-1);
+    var url = 'https://financialmodelingprep.com/api/v3/quote/$path?apikey=$fmpKey';
+    final response = await get(
+      Uri.parse(url),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.stringData);
+    } else {
+      throw Exception('Failed to fetch top actives');
+    }
+  }
 }
 
 class APIResponse {

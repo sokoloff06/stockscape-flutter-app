@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<dynamic>> topGainersFuture;
   late Future<List<dynamic>> topLosersFuture;
   late Future<List<dynamic>> topActiveFuture;
+  late Future<List<dynamic>> favoritesFuture;
 
   var searchController = SearchController();
 
@@ -28,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
     topGainersFuture = MyApp.apiService.fetchTopGainers();
     topLosersFuture = MyApp.apiService.fetchTopLosers();
     topActiveFuture = MyApp.apiService.fetchTopActive();
+    favoritesFuture = MyApp.apiService.fetchFavorites(FavoritesModel.getInstance().getFavorites());
   }
 
   @override
@@ -114,7 +116,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.swap_horiz),
-            label: 'Top Actively Traded in US',
+            label: 'Top Traded in US',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
           ),
         ],
       ),
@@ -133,6 +139,10 @@ class _HomeScreenState extends State<HomeScreen> {
       case 2:
         futureData = topActiveFuture;
         break;
+      case 3:
+        favoritesFuture = MyApp.apiService.fetchFavorites(FavoritesModel.getInstance().getFavorites());
+        futureData = favoritesFuture;
+        break;
       default:
         return const Center(child: Text('Invalid Tab Index'));
     }
@@ -144,8 +154,15 @@ class _HomeScreenState extends State<HomeScreen> {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
-          final stocksData = snapshot.data!;
-          return _buildStockList(stocksData);
+          var stocksData = snapshot.data!;
+          stocksData.sort((dynamic a, dynamic b) => a['changesPercentage'].compareTo(b['changesPercentage']));
+          if (_currentIndex == 0) {
+            stocksData = stocksData.reversed.toList();
+          } else if (_currentIndex == 2) {
+            stocksData.sort((dynamic a, dynamic b) => double.parse(a['change'].toString()).abs().compareTo(double.parse(b['change'].toString()).abs()));
+            stocksData = stocksData.reversed.toList();
+          }
+          return _buildTopGainersLosers(stocksData);
         }
       },
     );
@@ -203,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Padding(
                             padding: const EdgeInsets.all(5),
                             child: Text(
-                              "${stock['changesPercentage']}",
+                              "$change %",
                               style: TextStyle(
                                 color: textColor,
                               ),
@@ -219,14 +236,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ],
     );
-  }
-
-  Widget _buildStockList(List<dynamic> stocksData) {
-    if (_currentIndex >= 0 && _currentIndex <= 2) {
-      return _buildTopGainersLosers(stocksData);
-    } else {
-      return const Center(child: Text('Invalid Tab Index'));
-    }
   }
 
   void _navigateToDetailScreen(BuildContext context, String symbol) {

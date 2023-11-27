@@ -15,9 +15,10 @@ import 'models/favorites.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  FavoritesModel(prefs);
   runApp(ChangeNotifierProvider(
       create: (BuildContext context) {
-        return FavoritesModel(prefs);
+        return FavoritesModel.getInstance();
       },
       child: const MyApp()));
 }
@@ -47,6 +48,8 @@ class _MyAppState extends State<MyApp> {
 
     initFirebase();
     initAppsFlyer();
+
+
   }
 
   @override
