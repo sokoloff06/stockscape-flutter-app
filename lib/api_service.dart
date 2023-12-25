@@ -89,6 +89,9 @@ class APIService {
   }
 
   Future<List<dynamic>> fetchFavorites(Set<String> symbols) async {
+    if (symbols.isEmpty) {
+      return Future.error("No favorite stocks");
+    }
     String path = symbols.toString().substring(1, symbols.toString().length-1);
     var url = 'https://financialmodelingprep.com/api/v3/quote/$path?apikey=$fmpKey';
     final response = await get(
