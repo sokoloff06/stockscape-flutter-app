@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockscape/ui/home_screen.dart';
 import 'package:stockscape/ui/stock_detail_screen.dart';
 
+
 import 'api_service.dart';
 import 'firebase_options.dart';
 import 'models/favorites.dart';
@@ -47,9 +48,9 @@ class _MyAppState extends State<MyApp> {
         });
 
     initFirebase();
-    initAppsFlyer();
-
-
+    if (!kIsWeb) {
+      initAppsFlyer();
+    }
   }
 
   @override

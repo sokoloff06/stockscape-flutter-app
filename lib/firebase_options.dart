@@ -44,13 +44,13 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyC7LrXlA9pbQ8Shy0kLua_Fr2NI2JMSrOM',
-    appId: '1:1012971110099:web:1b3021332aa726b0d85e26',
-    messagingSenderId: '1012971110099',
-    projectId: 'stockscape',
-    authDomain: 'stockscape-de170.firebaseapp.com',
-    storageBucket: 'stockscape.appspot.com',
-    measurementId: 'G-YMLFSVGEW5',
+      apiKey: "AIzaSyAw1YzuiqgzgKAlF8g1PeQ7l6G7oPV4wXA",
+      authDomain: "stockscape-de170.firebaseapp.com",
+      projectId: "stockscape",
+      storageBucket: "stockscape.appspot.com",
+      messagingSenderId: "1012971110099",
+      appId: "1:1012971110099:web:ced89a080620fea8d85e26",
+      measurementId: "G-N1XJVDHB5C",
   );
 
   static const FirebaseOptions android = FirebaseOptions(
