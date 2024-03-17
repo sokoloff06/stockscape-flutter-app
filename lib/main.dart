@@ -17,6 +17,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   FavoritesModel(prefs);
+  Cache(prefs);
   runApp(ChangeNotifierProvider(
       create: (BuildContext context) {
         return FavoritesModel.getInstance();

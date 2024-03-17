@@ -3,16 +3,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class FavoritesModel extends ChangeNotifier {
   static late FavoritesModel instance;
-  static const String prefsKey = 'favs';
-  static const String symbolDataKey = 'isFavorite';
+  static const String favsKey = 'favs';
+  static const String isFavKey = 'isFavorite';
   final SharedPreferences _prefs;
   Set<String> _favs = <String>{};
 
   FavoritesModel(this._prefs) {
     instance = this;
-    var list = _prefs.getStringList(prefsKey);
-    if (list != null) {
-      _favs = list.toSet();
+    var favsList = _prefs.getStringList(favsKey);
+    if (favsList != null) {
+      _favs = favsList.toSet();
     }
   }
 
@@ -40,7 +40,7 @@ class FavoritesModel extends ChangeNotifier {
   }
 
   _saveStateToPrefs() {
-    _prefs.setStringList(prefsKey, _favs.toList(growable: false));
+    _prefs.setStringList(favsKey, _favs.toList(growable: false));
   }
 
   Set<String> getFavorites() {
