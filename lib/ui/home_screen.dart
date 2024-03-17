@@ -6,6 +6,7 @@ import 'package:stockscape/main.dart';
 import 'package:stockscape/ui/stock_detail_screen.dart';
 
 import '../models/favorites.dart';
+import '../webAds/adView.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,11 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
     topGainersFuture = MyApp.apiService.fetchTopGainers();
     topLosersFuture = MyApp.apiService.fetchTopLosers();
     topActiveFuture = MyApp.apiService.fetchTopActive();
-    favoritesFuture = MyApp.apiService.fetchFavorites(FavoritesModel.getInstance().getFavorites());
+    favoritesFuture = MyApp.apiService
+        .fetchFavorites(FavoritesModel.getInstance().getFavorites());
   }
 
   @override
   Widget build(BuildContext context) {
+    AdView.init();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Stock Market Tracker'),
@@ -94,6 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+          // const Column(children: [
+          //   SizedBox(height: 50, child: AdViewWidget()),
+          //   SizedBox(height: 50, child: AdViewWidget()),
+          // ]),
           Expanded(child: _buildTabContent()),
         ],
       ),
@@ -140,7 +147,8 @@ class _HomeScreenState extends State<HomeScreen> {
         futureData = topActiveFuture;
         break;
       case 3:
-        favoritesFuture = MyApp.apiService.fetchFavorites(FavoritesModel.getInstance().getFavorites());
+        favoritesFuture = MyApp.apiService
+            .fetchFavorites(FavoritesModel.getInstance().getFavorites());
         futureData = favoritesFuture;
         break;
       default:
@@ -155,11 +163,15 @@ class _HomeScreenState extends State<HomeScreen> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
           var stocksData = snapshot.data!;
-          stocksData.sort((dynamic a, dynamic b) => a['changesPercentage'].compareTo(b['changesPercentage']));
+          stocksData.sort((dynamic a, dynamic b) =>
+              a['changesPercentage'].compareTo(b['changesPercentage']));
           if (_currentIndex == 0) {
             stocksData = stocksData.reversed.toList();
           } else if (_currentIndex == 2) {
-            stocksData.sort((dynamic a, dynamic b) => double.parse(a['change'].toString()).abs().compareTo(double.parse(b['change'].toString()).abs()));
+            stocksData.sort((dynamic a, dynamic b) =>
+                double.parse(a['change'].toString())
+                    .abs()
+                    .compareTo(double.parse(b['change'].toString()).abs()));
             stocksData = stocksData.reversed.toList();
           }
           return _buildTopGainersLosers(stocksData);
@@ -176,62 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: stocks.length,
               itemBuilder: (context, index) {
                 final stock = stocks[index];
-                final changeString = stock['changesPercentage'].toString();
-                Color textBackground;
-                Color textColor;
-                var change = double.parse(changeString);
-                if (change > 0) {
-                  textBackground = Colors.green;
-                  textColor = Colors.white;
-                } else if (change < 0) {
-                  textBackground = Colors.red;
-                  textColor = Colors.white;
-                } else {
-                  textBackground = Colors.blueGrey;
-                  textColor = Colors.white;
-                }
-                return ListTile(
-                    title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            child: Card(
-                                child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(stock['symbol']),
-                            )),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text("\$${stock['price']}"),
-                          ),
-                        ]),
-                    subtitle: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          // child: Text("Some long name of the company"),
-                        ),
-                        FavoritesToggle(stock['symbol']),
-                        const Spacer(),
-                        Card(
-                          color: textBackground,
-                          child: Padding(
-                            padding: const EdgeInsets.all(5),
-                            child: Text(
-                              "$change %",
-                              style: TextStyle(
-                                color: textColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      _navigateToDetailScreen(context, stock['symbol']);
-                    });
+                return listStockItem(stock, index);
               }),
         ),
       ],
@@ -268,5 +225,68 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+  }
+
+  Widget listStockItem(stock, index) {
+    final changeString = stock['changesPercentage'].toString();
+    var change = double.parse(changeString);
+    Color textBackground;
+    Color textColor;
+    if (change > 0) {
+      textBackground = Colors.green;
+      textColor = Colors.white;
+    } else if (change < 0) {
+      textBackground = Colors.red;
+      textColor = Colors.white;
+    } else {
+      textBackground = Colors.blueGrey;
+      textColor = Colors.white;
+    }
+    var listTile = ListTile(
+        title:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          SizedBox(
+            child: Card(
+                child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(stock['symbol']),
+            )),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("\$${stock['price']}"),
+          ),
+        ]),
+        subtitle: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              // child: Text("Some long name of the company"),
+            ),
+            FavoritesToggle(stock['symbol']),
+            const Spacer(),
+            Card(
+              color: textBackground,
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: Text(
+                  "$change %",
+                  style: TextStyle(
+                    color: textColor,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        onTap: () {
+          _navigateToDetailScreen(context, stock['symbol']);
+        });
+    if (index > 1 && index % 5 == 0) {
+      return Column(children: [const SizedBox(height: 50, child: AdViewWidget()), listTile]);
+    } else {
+      return listTile;
+    }
   }
 }
