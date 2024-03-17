@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockscape/ui/home_screen.dart';
 import 'package:stockscape/ui/stock_detail_screen.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 
 import 'api_service.dart';
@@ -15,6 +16,9 @@ import 'models/favorites.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if(!kIsWeb) {
+    MobileAds.instance.initialize();
+  }
   SharedPreferences prefs = await SharedPreferences.getInstance();
   FavoritesModel(prefs);
   Cache(prefs);
