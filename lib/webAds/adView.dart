@@ -4,17 +4,17 @@ import 'dart:ui_web' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:web/web.dart';
 
-// <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0556581589806023"
-//      crossorigin="anonymous"></script>
-// <script>
-//      (adsbygoogle = window.adsbygoogle || []).push({});
-// </script>
+// <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6765186714303261"
+// crossorigin="anonymous"></script>
 // <ins class="adsbygoogle"
-//      style="display:block"
-//      data-ad-client="ca-pub-0556581589806023"
-//      data-ad-slot="9710276704"
-//      data-ad-format="auto"
-//      data-full-width-responsive="true"></ins>
+// style="display:block; text-align:center;"
+// data-ad-layout="in-article"
+// data-ad-format="fluid"
+// data-ad-client="ca-pub-6765186714303261"
+// data-ad-slot="3698125675"></ins>
+// <script>
+// (adsbygoogle = window.adsbygoogle || []).push({});
+// </script>
 
 
 class AdView {
@@ -28,8 +28,8 @@ class AdView {
           ..style.display = 'block'
           ..dataset = Map.of(
             {
-              "adClient": "ca-pub-0556581589806023",
-              "adSlot": "9710276704",
+              "adClient": "ca-pub-6765186714303261",
+              "adSlot": "3698125675",
               "adFormat": "auto",
               "fullWidthResponsive": "true"
             },
