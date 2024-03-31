@@ -1,18 +1,21 @@
 import 'dart:async';
 
+import 'package:adsense/adsense.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockscape/main.dart';
 import 'package:stockscape/ui/stock_detail_screen.dart';
 
 import '../models/favorites.dart';
-import '../webAds/adView.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeScreenState createState() {
+    return _HomeScreenState();
+  }
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -36,7 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AdView.init();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Stock Market Tracker'),
@@ -284,7 +286,8 @@ class _HomeScreenState extends State<HomeScreen> {
           _navigateToDetailScreen(context, stock['symbol']);
         });
     if (index > 1 && index % 5 == 0) {
-      return Column(children: [const SizedBox(height: 50, child: AdViewWidget()), listTile]);
+      return Column(
+          children: [SizedBox(height: 50, child: AdSense().adView()), listTile]);
     } else {
       return listTile;
     }

@@ -47,13 +47,13 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-
+    WidgetsFlutterBinding.ensureInitialized();
     futurePrefs.then((value) => () {
           prefs = value;
         });
-
     initFirebase();
     if (!kIsWeb) {
+      MobileAds.instance.initialize();
       initAppsFlyer();
     }
   }
@@ -78,7 +78,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initFirebase() async {
-    WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
