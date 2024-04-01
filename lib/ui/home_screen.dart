@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:adsense/adsense.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockscape/main.dart';
@@ -286,8 +285,10 @@ class _HomeScreenState extends State<HomeScreen> {
           _navigateToDetailScreen(context, stock['symbol']);
         });
     if (index > 1 && index % 5 == 0) {
-      return Column(
-          children: [SizedBox(height: 50, child: AdSense().adView()), listTile]);
+      return Column(children: [
+        SizedBox(height: 50, child: Adsense().adView()),
+        listTile
+      ]);
     } else {
       return listTile;
     }

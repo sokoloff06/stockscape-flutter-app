@@ -1,10 +1,14 @@
 import 'package:adsense_platform_interface/adsense_platform_interface.dart';
 import 'package:flutter/widgets.dart';
 
-class AdSense {
-  AdSense();
+class Adsense {
+  static AdsensePlatform instance = AdsensePlatform.instance;
+
+  void initialize() {
+    instance.initialize();
+  }
 
   Widget adView() {
-    return AdsensePlatform.instance.adView();
+    return instance.adView();
   }
 }

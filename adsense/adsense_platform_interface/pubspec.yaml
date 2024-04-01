@@ -13,6 +13,9 @@ dependencies:
   plugin_platform_interface: ^2.1.0
   adsense_web:
     path: ../adsense_web
+  adsense_mobile:
+    path: ../adsense_mobile
+
 
 dev_dependencies:
   flutter_test:
