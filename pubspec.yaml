@@ -43,10 +43,9 @@ dependencies:
   shared_preferences: ^2.2.2
   provider: ^6.1.1
   firebase_app_check: ^0.2.1+5
-  google_mobile_ads: ^4.0.0
   web: ^0.1.4-beta
-  adsense:
-    path: ./adsense/adsense
+  adsense: ^0.0.1
+#    path: ./adsense/adsense
 
 
 dev_dependencies:

@@ -1,6 +1,6 @@
 name: adsense_platform_interface
 description: Platform interface for AdSense plugin
-version: 0.0.1
+version: 0.0.2
 
 
 environment:
@@ -11,10 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.1.0
-  adsense_web:
-    path: ../adsense_web
-  adsense_mobile:
-    path: ../adsense_mobile
+  adsense_web: ^0.0.1
+  #    path: ../adsense_web
+  adsense_mobile: ^0.0.1
+#    path: ../adsense_mobile
 
 
 dev_dependencies:
