@@ -1,0 +1,37 @@
+name: adsense
+description: A federated plugin for showing google ads (AdMob and AdSense)
+version: 0.0.2
+
+environment:
+  sdk: '>=3.1.0 <4.0.0'
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
+
+  adsense_web: ^0.0.1
+  #    path: ../adsense_web
+  adsense_mobile: ^0.0.1
+  #    path: ../adsense_mobile
+  adsense_platform_interface: ^0.0.1
+#    path: ../adsense_platform_interface
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  plugin:
+    platforms:
+      web:
+        default_package: adsense_web
+      android:
+        default_package: adsense_mobile
+      ios:
+        default_package: adsense_mobile

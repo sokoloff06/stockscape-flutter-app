@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:adsense/adsense.dart';
+import 'package:adsense_web_standalone/adsense.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockscape/main.dart';
@@ -23,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<dynamic>> topLosersFuture;
   late Future<List<dynamic>> topActiveFuture;
   late Future<List<dynamic>> favoritesFuture;
+  var adHeight = 50.0;
 
   var searchController = SearchController();
 
@@ -284,11 +286,16 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: () {
           _navigateToDetailScreen(context, stock['symbol']);
         });
-    if (index > 1 && index % 5 == 0) {
-      return Column(children: [
-        SizedBox(height: 50, child: Adsense().adView()),
-        listTile
-      ]);
+    if (index > 1 && index % 5 == 0 && kIsWeb) {
+      var adView = Adsense().adView();
+      Adsense.setHeightUpdateListener((height) => {
+            debugPrint("listener invoked"),
+            setState(() {
+              adHeight = height.toDouble();
+            })
+          });
+      return Column(
+          children: [SizedBox(height: adHeight, child: adView), listTile]);
     } else {
       return listTile;
     }

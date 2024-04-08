@@ -1,3 +1,4 @@
+import 'package:adsense_web/adsense_web.dart';
 import 'package:flutter/widgets.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -7,7 +8,7 @@ abstract class AdsensePlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static AdsensePlatform _instance = AdsenseStub();
+  static AdsensePlatform _instance = AdsenseWeb();
 
   /// The default instance of [AdsensePlatform] to use.
   ///
@@ -27,15 +28,15 @@ abstract class AdsensePlatform extends PlatformInterface {
   void initialize();
 }
 
-class AdsenseStub extends AdsensePlatform {
-  @override
-  Widget adView() {
-    // TODO: implement adView
-    throw UnimplementedError();
-  }
-
-  @override
-  void initialize() {
-    // TODO: implement initialize
-  }
-}
+// class AdsenseStub extends AdsensePlatform {
+//   @override
+//   Widget adView() {
+//     // TODO: implement adView
+//     throw UnimplementedError();
+//   }
+//
+//   @override
+//   void initialize() {
+//     // TODO: implement initialize
+//   }
+// }

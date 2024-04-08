@@ -1,4 +1,4 @@
-import 'package:adsense/adsense.dart';
+import 'package:adsense_web_standalone/adsense.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -48,7 +48,7 @@ class _MyAppState extends State<MyApp> {
           prefs = value;
         });
     initFirebase();
-    Adsense.instance.initialize();
+    Adsense().initialize();
     if (!kIsWeb) {
       initAppsFlyer();
     }
