@@ -46,7 +46,7 @@ class Adsense {
           {
             "adClient": "ca-pub-0556581589806023",
             "adSlot": "4773943862",
-            "adFormat": "x",
+            "adFormat": "auto",
             "fullWidthResponsive": "true"
           },
         );
@@ -59,21 +59,27 @@ class Adsense {
         ..style.background = 'darkseagreen';
 
       html.ScriptElement pushAdsScript = html.ScriptElement();
-      // pushAdsScript.innerText = "(adsbygoogle = window.adsbygoogle || []).push({});";
+      pushAdsScript.innerText =
+          "setTimeout((adsbygoogle = window.adsbygoogle || []).push({}), 100)";
 
       insElement.addEventListener(
-          "DOMNodeInserted", (event) => updateHeight(event, div));
+          "DOMNodeInserted", (event) => onAdInserted(event, div));
 
       div.children = [text, insElement, pushAdsScript];
       return div;
     });
   }
 
-  static void updateHeight(html.Event event, html.DivElement container) {
+  static void onAdInserted(html.Event event, html.DivElement container) {
     debugPrint("DOMNodeInserted: ${event.target}");
     if (event.target.toString() == "iframe") {
-      var height = (event.target as html.Element).clientHeight;
-      debugPrint("height: $height");
+      var target = (event.target as html.Element);
+      var height = target.clientHeight;
+      var width = target.clientWidth;
+      var offsetHeight = target.offsetHeight;
+      var offsetWidth = target.offsetWidth;
+      debugPrint(
+          "height=$height; width=$width; offsetHeight=$offsetHeight; offsetWidth=$offsetWidth;");
       // TODO: remove container height logic (only for debugging)
       if (height != 0) {
         onNewHeightListener!(container.clientHeight + height);

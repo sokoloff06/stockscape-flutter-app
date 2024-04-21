@@ -1,3 +1,4 @@
+import 'package:adsense_web_standalone/adsense.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,44 +39,55 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
       appBar: AppBar(
         title: const Text('Stock Detail'),
       ),
-      body: FutureBuilder(
-        future: stockDataFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            final Map<String, dynamic>? quote = snapshot.data;
-            final double currentPrice = double.parse(quote!['c'].toString());
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+      body: Column(
+        children: [
+          FutureBuilder(
+            future: stockDataFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                final Map<String, dynamic>? quote = snapshot.data;
+                final double currentPrice =
+                    double.parse(quote!['c'].toString());
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.symbol, // Display stock symbol
-                        style:
-                            const TextStyle(fontSize: 18, color: Colors.grey),
+                      Row(
+                        children: [
+                          Text(
+                            widget.symbol, // Display stock symbol
+                            style: const TextStyle(
+                                fontSize: 18, color: Colors.grey),
+                          ),
+                          const Spacer(),
+                          FavoritesToggle(widget.symbol),
+                        ],
                       ),
-                      const Spacer(),
-                      FavoritesToggle(widget.symbol),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Price: \$${currentPrice.toStringAsFixed(2)}',
+                        // Display stock price
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                      // Add more stock information and charts here
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Price: \$${currentPrice.toStringAsFixed(2)}',
-                    // Display stock price
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  // Add more stock information and charts here
-                ],
-              ),
-            );
-          }
-        },
+                );
+              }
+            },
+          ),
+          Expanded(
+            child: Container(
+              color: Colors.blue,
+              child: Adsense().adView(),
+            ),
+          ),
+        ],
       ),
     );
   }
