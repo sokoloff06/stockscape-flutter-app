@@ -94,7 +94,9 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
                     height: 600,
                     child: Align(
                         alignment: Alignment.bottomCenter,
-                        child: Adsense().adView(null)),
+                        child: Adsense().adView(
+                            adSlot: "4773943862",
+                            adClient: "0556581589806023")),
                   ),
                 ]),
               ],
