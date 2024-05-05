@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:html' as html;
 import 'dart:js_interop';
-import 'dart:js_interop_unsafe';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
@@ -62,7 +61,7 @@ class _AdViewWidgetState extends State<AdViewWidget> {
   }
 
   static void onElementAttached(html.Element element) {
-    log("onElementAttached: ${element.toString()} with style: height=${element.clientHeight} and width=${element.clientWidth}");
+    log("Element ${element.id} attached with style: height=${element.clientHeight} and width=${element.clientWidth}");
 
     // final html.Element? located = html.document.querySelector('#adView');
     // assert(located == element, 'Wrong `element` located!');
@@ -97,16 +96,13 @@ class _AdViewWidgetState extends State<AdViewWidget> {
             onElementAttached(target);
             target.dataset.addAll({"attached": "true"});
             updateHeight(target.clientHeight);
-            // TODO: should update Flutter Widget height?
           } else {
             // Resized while being in DOM (by AdSense or by us)
-            for (dynamic entry in entries) {
+            for (html.ResizeObserverEntry entry in entries) {
               if (entry is JSObject) {
-                log("RO current entry: ${(entry.getProperty("target" as JSString) as JSObject).getProperty("id" as JSString).toString()}");
-                JSObject? rect = entry.getProperty('contentRect' as JSString);
-                if (rect != null) {
-                  var newHeight = rect.getProperty('height' as JSString);
-                  updateHeight(newHeight);
+                log("RO current entry: ${entry.target?.id}");
+                if (entry.contentRect != null) {
+                  updateHeight(entry.contentRect!.height);
                 }
               }
             }
