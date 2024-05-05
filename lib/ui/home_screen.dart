@@ -287,13 +287,18 @@ class _HomeScreenState extends State<HomeScreen> {
           _navigateToDetailScreen(context, stock['symbol']);
         });
     if (index > 1 && index % 5 == 0 && kIsWeb) {
-      var adView = Adsense().adView();
-      Adsense.setHeightUpdateListener((height) => {
-            debugPrint("listener invoked"),
+      var adView = Adsense().adView((height) => {
+            debugPrint("listener invoked with height $height"),
             setState(() {
               adHeight = height.toDouble();
             })
           });
+      // Adsense.setHeightUpdateListener((height) => {
+      //       debugPrint("listener invoked"),
+      //       setState(() {
+      //         adHeight = height.toDouble();
+      //       })
+      //     });
       return Column(
           children: [SizedBox(height: adHeight, child: adView), listTile]);
     } else {

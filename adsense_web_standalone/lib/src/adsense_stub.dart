@@ -14,7 +14,7 @@ class Adsense {
 
   Adsense._internal();
 
-  Widget adView() {
+  Widget adView(Function(int height)? heightListener) {
     return const Text("Unsupported platform");
   }
 
