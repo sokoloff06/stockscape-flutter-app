@@ -18,13 +18,15 @@ class Adsense {
   Widget adView(
       {required String adClient,
       required String adSlot,
+      String adLayoutKey = "",
+      String adLayout = "",
       String adFormat = "auto",
       bool isAdTest = false,
       bool isFullWidthResponsive = true}) {
     return const Text("Unsupported platform");
   }
 
-  void initialize() {
+  void initialize(String adClient) {
     log("Unsupported platform");
   }
 

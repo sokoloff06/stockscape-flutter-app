@@ -10,6 +10,8 @@ class AdViewWidget extends StatefulWidget {
   final String adClient;
   final String adSlot;
   final String adFormat;
+  final String adLayoutKey;
+  final String adLayout;
   final bool isAdTest;
   final bool isFullWidthResponsive;
   final html.Element insElement = html.document.createElement("ins");
@@ -17,9 +19,11 @@ class AdViewWidget extends StatefulWidget {
   AdViewWidget(
       {required this.adClient,
       required this.adSlot,
-      this.adFormat = 'auto',
-      this.isAdTest = false,
-      this.isFullWidthResponsive = true,
+      required this.adLayoutKey,
+      required this.adLayout,
+      required this.adFormat,
+      required this.isAdTest,
+      required this.isFullWidthResponsive,
       super.key}) {
     insElement
       ..className = 'adsbygoogle'
@@ -31,6 +35,12 @@ class AdViewWidget extends StatefulWidget {
         "adtest": true.toString(), //isAdTest.toString(),
         "fullWidthResponsive": isFullWidthResponsive.toString()
       });
+    if (adLayoutKey != "") {
+      insElement.dataset.addAll({"adLayoutKey": adLayoutKey});
+    }
+    if (adLayout != "") {
+      insElement.dataset.addAll({"adLayout": adLayout});
+    }
   }
 
   @override
@@ -39,7 +49,7 @@ class AdViewWidget extends StatefulWidget {
 
 class _AdViewWidgetState extends State<AdViewWidget> {
   static int adViewCounter = 0;
-  double adHeight = 10;
+  double adHeight = 100;
   late html.HtmlElement adViewDiv;
 
   @override
@@ -52,7 +62,8 @@ class _AdViewWidgetState extends State<AdViewWidget> {
   }
 
   static void onElementAttached(html.Element element) {
-    log("onElementAttached: ${element.toString()}");
+    log("onElementAttached: ${element.toString()} with style: height=${element.clientHeight} and width=${element.clientWidth}");
+
     // final html.Element? located = html.document.querySelector('#adView');
     // assert(located == element, 'Wrong `element` located!');
     // Do things with `element` or `located`, or call your code now...
@@ -66,7 +77,10 @@ class _AdViewWidgetState extends State<AdViewWidget> {
   void onElementCreated(Object element) {
     log("onElementCreated: ${element.toString()}");
     adViewDiv = element as html.HtmlElement;
-    adViewDiv.id = 'adView${(adViewCounter++).toString()}';
+    adViewDiv
+      ..id = 'adView${(adViewCounter++).toString()}'
+      ..style.height = "min-content"
+      ..style.textAlign = "center";
     // Adding ins inside of the adView
     adViewDiv.append(widget.insElement);
 
@@ -82,11 +96,11 @@ class _AdViewWidgetState extends State<AdViewWidget> {
           if (!target.dataset.containsKey("attached")) {
             onElementAttached(target);
             target.dataset.addAll({"attached": "true"});
+            updateHeight(target.clientHeight);
             // TODO: should update Flutter Widget height?
           } else {
             // Resized while being in DOM (by AdSense or by us)
             for (dynamic entry in entries) {
-              log("RO entries: ${entries.length}");
               if (entry is JSObject) {
                 log("RO current entry: ${(entry.getProperty("target" as JSString) as JSObject).getProperty("id" as JSString).toString()}");
                 JSObject? rect = entry.getProperty('contentRect' as JSString);

@@ -17,28 +17,34 @@ class Adsense {
 
   Adsense._internal();
 
-  void initialize() {
-    _addMasterScript();
+  void initialize(String adClient) {
+    _addMasterScript(adClient);
   }
 
   Widget adView(
       {required String adClient,
       required String adSlot,
+      String adLayoutKey = "",
+      String adLayout = "",
       String adFormat = "auto",
       bool isAdTest = false,
       bool isFullWidthResponsive = true}) {
     var adViewWidget = AdViewWidget(
-      adSlot: adSlot,
-      adClient: adClient,
-    );
+        adSlot: adSlot,
+        adClient: adClient,
+        adLayoutKey: adLayoutKey,
+        adLayout: adLayout,
+        adFormat: adFormat,
+        isAdTest: isAdTest,
+        isFullWidthResponsive: isFullWidthResponsive);
     return adViewWidget;
   }
 
-  static void _addMasterScript() {
+  static void _addMasterScript(String adClient) {
     html.ScriptElement scriptElement = html.ScriptElement();
     scriptElement.async = true;
     scriptElement.src =
-        "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0556581589806023";
+        "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-$adClient";
     scriptElement.crossOrigin = "anonymous";
     html.document.head != null
         ? html.document.head!.append(scriptElement)
