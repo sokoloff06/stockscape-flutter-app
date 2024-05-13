@@ -26,6 +26,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatefulWidget {
+  static const IS_DEBUG_BUILD = true;
   static final APIService apiService = APIService(
       'cjp2419r01qj85r47bhgcjp2419r01qj85r47bi0',
       'iEzh6dNrbIfRncuAZdMRQ71fCLkMlD1M');

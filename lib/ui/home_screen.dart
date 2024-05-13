@@ -287,8 +287,15 @@ class _HomeScreenState extends State<HomeScreen> {
           _navigateToDetailScreen(context, stock['symbol']);
         });
     if (index > 1 && index % 5 == 0 && kIsWeb) {
-      var adView =
-          Adsense().adView(adSlot: "4773943862", adClient: "0556581589806023");
+      var adView = Container(
+        constraints: const BoxConstraints(
+          maxWidth: 500,
+        ),
+        child: Adsense().adView(
+            adSlot: "4773943862",
+            adClient: "0556581589806023",
+            isAdTest: MyApp.IS_DEBUG_BUILD),
+      );
       return Column(children: [adView, listTile]);
     } else {
       return listTile;

@@ -1,19 +1,7 @@
-library adsense_web_standalone;
+import 'package:flutter/widgets.dart';
 
-import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
-
-/// A web implementation of the AdsensePlatform of the Adsense plugin.
-/// TODO: remove stub and use conditional import in the example app
 class Adsense {
-  static final Adsense _instance = Adsense._internal();
-
-  factory Adsense() {
-    return _instance;
-  }
-
-  Adsense._internal();
+  void initialize(String adClient) {}
 
   Widget adView(
       {required String adClient,
@@ -22,15 +10,8 @@ class Adsense {
       String adLayout = "",
       String adFormat = "auto",
       bool isAdTest = false,
-      bool isFullWidthResponsive = true}) {
-    return const Text("Unsupported platform");
-  }
-
-  void initialize(String adClient) {
-    log("Unsupported platform");
-  }
-
-  static setHeightUpdateListener(Function(int height) listener) {
-    log("Unsupported platform");
+      bool isFullWidthResponsive = true,
+      Map<String, String> slotParams = const {}}) {
+    throw "Only supported on web";
   }
 }

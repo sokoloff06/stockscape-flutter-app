@@ -1,5 +1,6 @@
 import 'package:adsense_web_standalone/adsense.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stockscape/main.dart';
@@ -90,14 +91,20 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
                     height: 2000,
                   ),
                   Container(
-                    color: Colors.red,
-                    height: 600,
-                    child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Adsense().adView(
-                            adSlot: "4773943862",
-                            adClient: "0556581589806023")),
-                  ),
+                      color: Colors.red,
+                      height: 600,
+                      child: () {
+                        if (kIsWeb) {
+                          return Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Adsense().adView(
+                                  adSlot: "4773943862",
+                                  adClient: "0556581589806023",
+                                  isAdTest: MyApp.IS_DEBUG_BUILD));
+                        } else {
+                          return null;
+                        }
+                      }()),
                 ]),
               ],
             ),

@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:html' as html;
-import 'dart:js_interop';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
@@ -13,6 +12,7 @@ class AdViewWidget extends StatefulWidget {
   final String adLayout;
   final bool isAdTest;
   final bool isFullWidthResponsive;
+  final Map<String, String> slotParams;
   final html.Element insElement = html.document.createElement("ins");
 
   AdViewWidget(
@@ -23,6 +23,7 @@ class AdViewWidget extends StatefulWidget {
       required this.adFormat,
       required this.isAdTest,
       required this.isFullWidthResponsive,
+      required this.slotParams,
       super.key}) {
     insElement
       ..className = 'adsbygoogle'
@@ -31,7 +32,7 @@ class AdViewWidget extends StatefulWidget {
         "adClient": "ca-pub-$adClient",
         "adSlot": adSlot,
         "adFormat": adFormat,
-        "adtest": true.toString(), //isAdTest.toString(),
+        "adtest": isAdTest.toString(),
         "fullWidthResponsive": isFullWidthResponsive.toString()
       });
     if (adLayoutKey != "") {
@@ -40,32 +41,43 @@ class AdViewWidget extends StatefulWidget {
     if (adLayout != "") {
       insElement.dataset.addAll({"adLayout": adLayout});
     }
+    if (slotParams.isNotEmpty) {
+      insElement.dataset.addAll(slotParams);
+    }
   }
 
   @override
   State<AdViewWidget> createState() => _AdViewWidgetState();
 }
 
-class _AdViewWidgetState extends State<AdViewWidget> {
+class _AdViewWidgetState extends State<AdViewWidget>
+    with AutomaticKeepAliveClientMixin {
   static int adViewCounter = 0;
-  double adHeight = 100;
+  double adHeight = 1;
   late html.HtmlElement adViewDiv;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SizedBox(
       height: adHeight,
       child: HtmlElementView.fromTagName(
-          tagName: "div", onElementCreated: onElementCreated, isVisible: false),
+          tagName: "div", onElementCreated: onElementCreated, isVisible: true),
     );
   }
 
   static void onElementAttached(html.Element element) {
-    log("Element ${element.id} attached with style: height=${element.clientHeight} and width=${element.clientWidth}");
+    log("Element ${element.id} attached with style: height=${element.offsetHeight} and width=${element.offsetWidth}");
 
     // final html.Element? located = html.document.querySelector('#adView');
     // assert(located == element, 'Wrong `element` located!');
     // Do things with `element` or `located`, or call your code now...
+
+    // AdsByGoogle.push(element);
+
     var pushAdsScript = html.ScriptElement();
     pushAdsScript.innerText =
         "(adsbygoogle = window.adsbygoogle || []).push({});";
@@ -95,15 +107,14 @@ class _AdViewWidgetState extends State<AdViewWidget> {
           if (!target.dataset.containsKey("attached")) {
             onElementAttached(target);
             target.dataset.addAll({"attached": "true"});
-            updateHeight(target.clientHeight);
           } else {
             // Resized while being in DOM (by AdSense or by us)
             for (html.ResizeObserverEntry entry in entries) {
-              if (entry is JSObject) {
-                log("RO current entry: ${entry.target?.id}");
-                if (entry.contentRect != null) {
-                  updateHeight(entry.contentRect!.height);
-                }
+              var target = entry.target!;
+              log("RO current entry: ${target.id}");
+              if (entry.contentRect != null &&
+                  isFilled(target.children.first)) {
+                updateHeight(entry.contentRect!.height);
               }
             }
           }
@@ -117,30 +128,37 @@ class _AdViewWidgetState extends State<AdViewWidget> {
         (List<dynamic> entries, html.MutationObserver observer) {
       for (html.MutationRecord entry in entries) {
         log("MO entries: ${entries.length}");
-        if (entry is JSObject) {
-          var target = entry.target as html.Element;
-          log("MO current entry: ${target.toString()}");
-          var adStatus = target.dataset["adStatus"];
-          switch (adStatus) {
-            case "filled":
-              {
-                log("Ad filled");
-                resizeObserver.unobserve(element);
-                observer.disconnect();
-              }
-            case "unfilled":
-              {
-                log("Ad unfilled!");
-                element.style.height = "0px";
-              }
-            default:
-              log("No data-ad-status attribute found");
-          }
+        var target = entry.target as html.Element;
+        log("MO current entry: ${target.toString()}");
+        // isFilled(target, resizeObserver, element, observer);
+        if (isFilled(target)) {
+          resizeObserver.unobserve(element);
+          observer.disconnect();
         }
       }
     });
     mutationObserver.observe(widget.insElement,
         attributes: true, attributeFilter: ["data-ad-status"]);
+  }
+
+  bool isFilled(html.Element target) {
+    var adStatus = target.dataset["adStatus"];
+    switch (adStatus) {
+      case "filled":
+        {
+          log("Ad filled");
+          return true;
+        }
+      case "unfilled":
+        {
+          log("Ad unfilled!");
+          return false;
+          // element.style.height = "0px";
+        }
+      default:
+        log("No data-ad-status attribute found");
+        return false;
+    }
   }
 
   void updateHeight(newHeight) {

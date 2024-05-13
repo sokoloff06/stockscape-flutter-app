@@ -5,22 +5,24 @@ import 'dart:html' as html;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 
-import './views/ad_view_widget.dart';
+import 'ad_view_widget.dart';
+import 'adsense_stub.dart';
 
-/// A web implementation of the AdsensePlatform of the Adsense plugin.
-class Adsense {
-  static final Adsense _instance = Adsense._internal();
+class AdsenseWeb implements Adsense {
+  static final AdsenseWeb _instance = AdsenseWeb._internal();
 
-  factory Adsense() {
+  factory AdsenseWeb() {
     return _instance;
   }
 
-  Adsense._internal();
+  AdsenseWeb._internal();
 
+  @override
   void initialize(String adClient) {
     _addMasterScript(adClient);
   }
 
+  @override
   Widget adView(
       {required String adClient,
       required String adSlot,
@@ -28,15 +30,18 @@ class Adsense {
       String adLayout = "",
       String adFormat = "auto",
       bool isAdTest = false,
-      bool isFullWidthResponsive = true}) {
+      bool isFullWidthResponsive = true,
+      Map<String, String> slotParams = const {}}) {
     var adViewWidget = AdViewWidget(
-        adSlot: adSlot,
-        adClient: adClient,
-        adLayoutKey: adLayoutKey,
-        adLayout: adLayout,
-        adFormat: adFormat,
-        isAdTest: isAdTest,
-        isFullWidthResponsive: isFullWidthResponsive);
+      adSlot: adSlot,
+      adClient: adClient,
+      adLayoutKey: adLayoutKey,
+      adLayout: adLayout,
+      adFormat: adFormat,
+      isAdTest: isAdTest,
+      isFullWidthResponsive: isFullWidthResponsive,
+      slotParams: slotParams,
+    );
     return adViewWidget;
   }
 
