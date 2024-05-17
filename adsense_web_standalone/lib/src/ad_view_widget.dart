@@ -86,8 +86,8 @@ class _AdViewWidgetState extends State<AdViewWidget>
   }
 
   void onElementCreated(Object element) {
-    log("onElementCreated: ${element.toString()}");
     adViewDiv = element as html.HtmlElement;
+    log("onElementCreated: ${adViewDiv.toString()} with style height=${element.offsetHeight} and width=${element.offsetWidth}");
     adViewDiv
       ..id = 'adView${(adViewCounter++).toString()}'
       ..style.height = "min-content"
@@ -96,6 +96,7 @@ class _AdViewWidgetState extends State<AdViewWidget>
     adViewDiv.append(widget.insElement);
 
     // TODO: Make shared
+    // Using Resize observer to detect element attached to DOM
     final html.ResizeObserver resizeObserver = html.ResizeObserver(
         (List<dynamic> entries, html.ResizeObserver observer) {
       // We only care about resize that happens after element is attached to DOM
@@ -107,38 +108,42 @@ class _AdViewWidgetState extends State<AdViewWidget>
           if (!target.dataset.containsKey("attached")) {
             onElementAttached(target);
             target.dataset.addAll({"attached": "true"});
-          } else {
-            // Resized while being in DOM (by AdSense or by us)
-            for (html.ResizeObserverEntry entry in entries) {
-              var target = entry.target!;
-              log("RO current entry: ${target.id}");
-              if (entry.contentRect != null &&
-                  isFilled(target.children.first)) {
-                updateHeight(entry.contentRect!.height);
-              }
-            }
+            observer.disconnect();
           }
         }
       }
     });
     // Connect the observer.
-    resizeObserver.observe(element);
+    resizeObserver.observe(adViewDiv);
 
+    // Using Mutation Observer to detect when adslot is being loaded
     final html.MutationObserver mutationObserver = html.MutationObserver(
         (List<dynamic> entries, html.MutationObserver observer) {
       for (html.MutationRecord entry in entries) {
-        log("MO entries: ${entries.length}");
         var target = entry.target as html.Element;
         log("MO current entry: ${target.toString()}");
-        // isFilled(target, resizeObserver, element, observer);
-        if (isFilled(target)) {
-          resizeObserver.unobserve(element);
+        if (isLoaded(target)) {
           observer.disconnect();
+          if (isFilled(target)) {
+            updateHeight(target.offsetHeight);
+          } else {
+            target.style.pointerEvents = "none";
+          }
         }
       }
     });
     mutationObserver.observe(widget.insElement,
         attributes: true, attributeFilter: ["data-ad-status"]);
+  }
+
+  bool isLoaded(html.Element target) {
+    var isLoaded = target.dataset.containsKey("adStatus");
+    if (isLoaded) {
+      log("Ad is loaded");
+    } else {
+      log("Ad is loading");
+    }
+    return isLoaded;
   }
 
   bool isFilled(html.Element target) {
@@ -153,7 +158,6 @@ class _AdViewWidgetState extends State<AdViewWidget>
         {
           log("Ad unfilled!");
           return false;
-          // element.style.height = "0px";
         }
       default:
         log("No data-ad-status attribute found");
