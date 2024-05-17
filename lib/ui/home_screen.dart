@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:adsense_web_standalone/adsense.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:stockscape/main.dart';
-import 'package:stockscape/ui/stock_detail_screen.dart';
 
 import '../models/favorites.dart';
 
@@ -199,12 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _navigateToDetailScreen(BuildContext context, String symbol) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => StockDetailScreen(symbol),
-      ),
-    );
+    context.push('/stocks/$symbol');
   }
 
   Widget FavoritesToggle(symbol) {
@@ -288,9 +283,9 @@ class _HomeScreenState extends State<HomeScreen> {
         });
     if (index > 1 && index % 5 == 0 && kIsWeb) {
       var adView = Container(
-        constraints: const BoxConstraints(
-          maxWidth: 500,
-        ),
+        // constraints: const BoxConstraints(
+        //   maxWidth: 500,
+        // ),
         child: Adsense().adView(
             adSlot: "4773943862",
             adClient: "0556581589806023",

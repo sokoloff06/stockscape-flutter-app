@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockscape/ui/home_screen.dart';
@@ -12,6 +13,19 @@ import 'package:stockscape/ui/stock_detail_screen.dart';
 import 'api_service.dart';
 import 'firebase_options.dart';
 import 'models/favorites.dart';
+
+final _router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+        path: '/stocks/:symbol',
+        builder: (context, state) =>
+            StockDetailScreen(state.pathParameters['symbol']!))
+  ],
+);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,6 +71,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routerConfig: _router,
+    );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Stock Market App',
