@@ -43,7 +43,6 @@ dependencies:
   shared_preferences: ^2.2.2
   provider: ^6.1.1
   firebase_app_check: ^0.2.1+5
-  web: ^0.1.4-beta
   #  adsense: ^0.0.1
 #    path: ./adsense/adsense
   adsense_web_standalone:
