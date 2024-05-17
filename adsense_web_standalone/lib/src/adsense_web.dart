@@ -12,13 +12,12 @@ class Adsense {
   static final Adsense _instance = Adsense._internal();
   static bool isInitialized = false;
 
+  Adsense._internal();
+
   factory Adsense() {
     return _instance;
   }
 
-  Adsense._internal();
-
-  @override
   void initialize(String adClient) {
     if (isInitialized) {
       log("Adsense was already initialized, skipping");
@@ -28,7 +27,6 @@ class Adsense {
     _addMasterScript(adClient);
   }
 
-  @override
   Widget adView(
       {required String adClient,
       required String adSlot,
