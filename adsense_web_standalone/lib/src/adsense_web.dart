@@ -1,24 +1,30 @@
 library adsense_web_standalone;
 
-import 'dart:html' as html;
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
+import 'package:web/web.dart' as web;
 
 import 'ad_view_widget.dart';
-import 'adsense_stub.dart';
 
-class AdsenseWeb implements Adsense {
-  static final AdsenseWeb _instance = AdsenseWeb._internal();
+class Adsense {
+  static final Adsense _instance = Adsense._internal();
+  static bool isInitialized = false;
 
-  factory AdsenseWeb() {
+  factory Adsense() {
     return _instance;
   }
 
-  AdsenseWeb._internal();
+  Adsense._internal();
 
   @override
   void initialize(String adClient) {
+    if (isInitialized) {
+      log("Adsense was already initialized, skipping");
+      return;
+    }
+    isInitialized = true;
     _addMasterScript(adClient);
   }
 
@@ -32,7 +38,7 @@ class AdsenseWeb implements Adsense {
       bool isAdTest = false,
       bool isFullWidthResponsive = true,
       Map<String, String> slotParams = const {}}) {
-    var adViewWidget = AdViewWidget(
+    return AdViewWidget(
       adSlot: adSlot,
       adClient: adClient,
       adLayoutKey: adLayoutKey,
@@ -42,17 +48,19 @@ class AdsenseWeb implements Adsense {
       isFullWidthResponsive: isFullWidthResponsive,
       slotParams: slotParams,
     );
-    return adViewWidget;
   }
 
   static void _addMasterScript(String adClient) {
-    html.ScriptElement scriptElement = html.ScriptElement();
+    web.HTMLScriptElement scriptElement = web.HTMLScriptElement();
     scriptElement.async = true;
     scriptElement.src =
         "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-$adClient";
     scriptElement.crossOrigin = "anonymous";
-    html.document.head != null
-        ? html.document.head!.append(scriptElement)
-        : html.document.append(scriptElement);
+    var head = web.document.head;
+    if (head != null) {
+      head.appendChild(scriptElement);
+    } else {
+      web.document.appendChild(scriptElement);
+    }
   }
 }
