@@ -11,10 +11,8 @@ import 'package:adsense_web/views/ad_view_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
-
 /// A web implementation of the AdsensePlatform of the Adsense plugin.
 class AdsenseWeb extends AdsensePlatform {
-
   static void registerWith(Registrar registrar) {
     AdsensePlatform.instance = AdsenseWeb();
   }

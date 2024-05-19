@@ -67,7 +67,6 @@ class APIService {
         'https://financialmodelingprep.com/api/v3/quote/$path?apikey=$fmpKey');
     return await makeRequest(url);
   }
-
 }
 
 class Cache {
@@ -82,15 +81,15 @@ class Cache {
     return instance;
   }
 
-  save(String data, Uri url){
+  save(String data, Uri url) {
     _prefs.setString(url.toString(), data);
   }
 
-  read(Uri url){
+  read(Uri url) {
     return _prefs.get(url.toString());
   }
 
-  delete(Uri url){
+  delete(Uri url) {
     _prefs.remove(url.toString());
   }
 }

@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  html: ^0.15.4
   web: ^0.5.1
 
 dev_dependencies:

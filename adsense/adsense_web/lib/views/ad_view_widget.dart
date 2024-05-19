@@ -13,4 +13,3 @@ class _AdViewWidgetState extends State<AdViewWidget> {
     return const HtmlElementView(viewType: 'adView');
   }
 }
-
