@@ -13,7 +13,8 @@ class AdViewWidget extends StatefulWidget {
   final bool isAdTest;
   final bool isFullWidthResponsive;
   final Map<String, String> slotParams;
-  final html.Element insElement = html.document.createElement("ins");
+  final web.HTMLElement insElement =
+      web.document.createElement("ins") as web.HTMLElement;
 
   AdViewWidget(
       {required this.adClient,
@@ -27,22 +28,31 @@ class AdViewWidget extends StatefulWidget {
       super.key}) {
     insElement
       ..className = 'adsbygoogle'
-      ..style.display = 'block'
-      ..dataset = Map.of({
-        "adClient": "ca-pub-$adClient",
-        "adSlot": adSlot,
-        "adFormat": adFormat,
-        "adtest": isAdTest.toString(),
-        "fullWidthResponsive": isFullWidthResponsive.toString()
-      });
+      ..style.display = 'block';
+    var dataattrs = Map.of({
+      "adClient": "ca-pub-$adClient",
+      "adSlot": adSlot,
+      "adFormat": adFormat,
+      "adtest": isAdTest.toString(),
+      "fullWidthResponsive": isFullWidthResponsive.toString()
+    });
+    for (var key in dataattrs.keys) {
+      insElement.dataset
+          .setProperty(key as JSString, dataattrs[key] as JSString);
+    }
     if (adLayoutKey != "") {
-      insElement.dataset.addAll({"adLayoutKey": adLayoutKey});
+      insElement.dataset
+          .setProperty("adLayoutKey" as JSString, adLayoutKey as JSString);
     }
     if (adLayout != "") {
-      insElement.dataset.addAll({"adLayout": adLayout});
+      insElement.dataset
+          .setProperty("adLayout" as JSString, adLayout as JSString);
     }
     if (slotParams.isNotEmpty) {
-      insElement.dataset.addAll(slotParams);
+      for (var key in slotParams.keys) {
+        insElement.dataset
+            .setProperty(key as JSString, slotParams[key] as JSString);
+      }
     }
   }
 
@@ -54,7 +64,7 @@ class _AdViewWidgetState extends State<AdViewWidget>
     with AutomaticKeepAliveClientMixin {
   static int adViewCounter = 0;
   double adHeight = 1;
-  late html.HtmlElement adViewDiv;
+  late web.HTMLElement adViewDiv;
 
   @override
   bool get wantKeepAlive => true;
@@ -69,16 +79,10 @@ class _AdViewWidgetState extends State<AdViewWidget>
     );
   }
 
-  static void onElementAttached(html.Element element) {
+  static void onElementAttached(web.HTMLElement element) {
     log("Element ${element.id} attached with style: height=${element.offsetHeight} and width=${element.offsetWidth}");
-
-    // final html.Element? located = html.document.querySelector('#adView');
-    // assert(located == element, 'Wrong `element` located!');
-    // Do things with `element` or `located`, or call your code now...
-
-    // AdsByGoogle.push(element);
-
-    var pushAdsScript = html.ScriptElement();
+    // TODO: replace with proper js_interop
+    var pushAdsScript = web.HTMLScriptElement();
     pushAdsScript.innerText =
         "(adsbygoogle = window.adsbygoogle || []).push({});";
     log("Adding push ads script");
@@ -86,7 +90,7 @@ class _AdViewWidgetState extends State<AdViewWidget>
   }
 
   void onElementCreated(Object element) {
-    adViewDiv = element as html.HtmlElement;
+    adViewDiv = element as web.HTMLElement;
     log("onElementCreated: ${adViewDiv.toString()} with style height=${element.offsetHeight} and width=${element.offsetWidth}");
     adViewDiv
       ..id = 'adView${(adViewCounter++).toString()}'
@@ -97,30 +101,31 @@ class _AdViewWidgetState extends State<AdViewWidget>
 
     // TODO: Make shared
     // Using Resize observer to detect element attached to DOM
-    final html.ResizeObserver resizeObserver = html.ResizeObserver(
-        (List<dynamic> entries, html.ResizeObserver observer) {
-      // We only care about resize that happens after element is attached to DOM
-      for (dynamic entry in entries) {
-        var target = (entry as html.ResizeObserverEntry).target;
-        if (target == null) return;
-        if (target.isConnected!) {
+    web.ResizeObserver((JSArray<web.ResizeObserverEntry> entries,
+            web.ResizeObserver observer) {
+      for (web.ResizeObserverEntry entry in entries.toDart) {
+        var target = entry.target;
+        if (target.isConnected) {
           // First time resized since attached to DOM -> attachment callback from Flutter docs by David
-          if (!target.dataset.containsKey("attached")) {
+          if (!(target as web.HTMLElement)
+              .dataset
+              .getProperty("attached" as JSString)
+              .isDefinedAndNotNull) {
             onElementAttached(target);
-            target.dataset.addAll({"attached": "true"});
+            target.dataset
+                .setProperty("attached" as JSString, true as JSBoolean);
             observer.disconnect();
           }
         }
       }
-    });
-    // Connect the observer.
-    resizeObserver.observe(adViewDiv);
+    }.toJS)
+        .observe(adViewDiv);
 
     // Using Mutation Observer to detect when adslot is being loaded
-    final html.MutationObserver mutationObserver = html.MutationObserver(
-        (List<dynamic> entries, html.MutationObserver observer) {
-      for (html.MutationRecord entry in entries) {
-        var target = entry.target as html.Element;
+    web.MutationObserver(
+            ((JSArray<JSObject> entries, web.MutationObserver observer) {
+      for (JSObject entry in entries.toDart) {
+        var target = (entry as web.MutationRecord).target as web.HTMLElement;
         log("MO current entry: ${target.toString()}");
         if (isLoaded(target)) {
           observer.disconnect();
@@ -131,13 +136,18 @@ class _AdViewWidgetState extends State<AdViewWidget>
           }
         }
       }
-    });
-    mutationObserver.observe(widget.insElement,
-        attributes: true, attributeFilter: ["data-ad-status"]);
+    }.toJS))
+        .observe(
+            widget.insElement,
+            web.MutationObserverInit(
+                attributes: true,
+                attributeFilter:
+                    ["data-ad-status"].jsify() as JSArray<JSString>));
   }
 
-  bool isLoaded(html.Element target) {
-    var isLoaded = target.dataset.containsKey("adStatus");
+  bool isLoaded(web.HTMLElement target) {
+    var isLoaded =
+        target.dataset.getProperty("adStatus" as JSString).isDefinedAndNotNull;
     if (isLoaded) {
       log("Ad is loaded");
     } else {
@@ -146,8 +156,8 @@ class _AdViewWidgetState extends State<AdViewWidget>
     return isLoaded;
   }
 
-  bool isFilled(html.Element target) {
-    var adStatus = target.dataset["adStatus"];
+  bool isFilled(web.HTMLElement target) {
+    var adStatus = target.dataset.getProperty("adStatus" as JSString);
     switch (adStatus) {
       case "filled":
         {
