@@ -1,4 +1,4 @@
-import 'package:adsense_web_standalone/adsense.dart';
+import 'package:google_adsense/adsense.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';

@@ -1,7 +1,7 @@
-import 'package:adsense_web_standalone/adsense.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_adsense/adsense.dart';
 import 'package:provider/provider.dart';
 import 'package:stockscape/main.dart';
 import 'package:stockscape/models/favorites.dart';

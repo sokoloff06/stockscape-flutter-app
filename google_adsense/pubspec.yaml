@@ -1,5 +1,5 @@
-name: adsense_web_standalone
-description: A new Flutter package project.
+name: google_adsense
+description: Google Adsense plugin for Flutter Web
 version: 0.0.1
 homepage:
 

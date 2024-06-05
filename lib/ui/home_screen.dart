@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:adsense_web_standalone/adsense.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_adsense/adsense.dart';
 import 'package:provider/provider.dart';
 import 'package:stockscape/main.dart';
 
