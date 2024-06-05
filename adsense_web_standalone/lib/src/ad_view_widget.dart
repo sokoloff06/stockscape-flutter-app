@@ -1,8 +1,10 @@
 import 'dart:developer';
-import 'dart:html' as html;
+import 'dart:js_interop';
+import 'dart:js_interop_unsafe';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
+import 'package:web/web.dart' as web;
 
 class AdViewWidget extends StatefulWidget {
   final String adClient;
