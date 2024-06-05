@@ -1,7 +1,9 @@
 import 'package:flutter/widgets.dart';
 
 class Adsense {
-  void initialize(String adClient) {}
+  void initialize(String adClient) {
+    throw "Only supported on web";
+  }
 
   Widget adView(
       {required String adClient,
