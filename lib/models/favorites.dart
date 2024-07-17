@@ -1,4 +1,7 @@
+import 'package:devicelocale/devicelocale.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FavoritesModel extends ChangeNotifier {
@@ -24,8 +27,14 @@ class FavoritesModel extends ChangeNotifier {
     return _favs.contains(symbol);
   }
 
-  addToFavorites(String symbol) {
+  addToFavorites(String symbol, double price) async {
     _favs.add(symbol);
+    String? locale = await Devicelocale.defaultLocale;
+    var format = NumberFormat.simpleCurrency(locale: locale);
+    FirebaseAnalytics.instance.logPurchase(
+        currency: format.currencyName,
+        value: price,
+        items: <AnalyticsEventItem>[AnalyticsEventItem(itemName: symbol)]);
     _finishTransaction();
   }
 

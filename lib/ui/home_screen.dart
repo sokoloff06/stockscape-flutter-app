@@ -202,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
     context.push('/stocks/$symbol');
   }
 
-  Widget FavoritesToggle(symbol) {
+  Widget FavoritesToggle(String symbol, double price) {
     return Consumer<FavoritesModel>(
       builder: (
         BuildContext context,
@@ -214,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
             setState(() {
               favoritesModel.isFavorite(symbol)
                   ? favoritesModel.removeFromFavorites(symbol)
-                  : favoritesModel.addToFavorites(symbol);
+                  : favoritesModel.addToFavorites(symbol, price);
             });
           },
           child: Icon(favoritesModel.isFavorite(symbol)
@@ -262,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.all(8.0),
               // child: Text("Some long name of the company"),
             ),
-            FavoritesToggle(stock['symbol']),
+            FavoritesToggle(stock['symbol'], stock['price']),
             const Spacer(),
             Card(
               color: textBackground,

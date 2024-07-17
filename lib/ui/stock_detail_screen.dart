@@ -69,7 +69,7 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
                                       fontSize: 18, color: Colors.grey),
                                 ),
                                 const Spacer(),
-                                FavoritesToggle(widget.symbol),
+                                FavoritesToggle(widget.symbol, currentPrice),
                               ],
                             ),
                             const SizedBox(height: 20),
@@ -115,7 +115,7 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
   }
 
   // TODO: Deduplicate
-  Widget FavoritesToggle(symbol) {
+  Widget FavoritesToggle(String symbol, double price) {
     return Consumer<FavoritesModel>(
       builder: (
         BuildContext context,
@@ -127,7 +127,7 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
             setState(() {
               favoritesModel.isFavorite(symbol)
                   ? favoritesModel.removeFromFavorites(symbol)
-                  : favoritesModel.addToFavorites(symbol);
+                  : favoritesModel.addToFavorites(symbol, price);
             });
           },
           child: Icon(favoritesModel.isFavorite(symbol)

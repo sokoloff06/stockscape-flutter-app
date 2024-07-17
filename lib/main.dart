@@ -63,9 +63,10 @@ class _MyAppState extends State<MyApp> {
           prefs = value;
         });
     initFirebase();
-    Adsense().initialize("0556581589806023");
     if (!kIsWeb) {
       initAppsFlyer();
+    } else {
+      Adsense().initialize("0556581589806023");
     }
   }
 
