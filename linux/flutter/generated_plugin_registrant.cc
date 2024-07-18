@@ -9,8 +9,8 @@
 #include <devicelocale/devicelocale_plugin.h>
 
 void fl_register_plugins(FlPluginRegistry* registry) {
-    g_autoptr(FlPluginRegistrar)
-    devicelocale_registrar =
-            fl_plugin_registry_get_registrar_for_plugin(registry, "DevicelocalePlugin");
-    devicelocale_plugin_register_with_registrar(devicelocale_registrar);
+  g_autoptr(FlPluginRegistrar)
+  devicelocale_registrar =
+          fl_plugin_registry_get_registrar_for_plugin(registry, "DevicelocalePlugin");
+  devicelocale_plugin_register_with_registrar(devicelocale_registrar);
 }

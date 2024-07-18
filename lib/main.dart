@@ -1,17 +1,12 @@
-import 'package:appsflyer_sdk/appsflyer_sdk.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_adsense/adsense.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stockscape/analytics.dart';
 import 'package:stockscape/ui/home_screen.dart';
 import 'package:stockscape/ui/stock_detail_screen.dart';
 
 import 'api_service.dart';
-import 'firebase_options.dart';
 import 'models/favorites.dart';
 
 final _router = GoRouter(
@@ -62,12 +57,7 @@ class _MyAppState extends State<MyApp> {
     futurePrefs.then((value) => () {
           prefs = value;
         });
-    initFirebase();
-    if (!kIsWeb) {
-      initAppsFlyer();
-    } else {
-      Adsense().initialize("0556581589806023");
-    }
+    Analytics.instance.initSDKs();
   }
 
   @override
@@ -90,38 +80,5 @@ class _MyAppState extends State<MyApp> {
         '/stockDetail': (context) => const StockDetailScreen(''),
       },
     );
-  }
-
-  Future<void> initFirebase() async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    // Pass all uncaught "fatal" errors from the framework to Crashlytics
-    FlutterError.onError = (errorDetails) {
-      FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-    };
-    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
-    PlatformDispatcher.instance.onError = (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      return true;
-    };
-  }
-
-  void initAppsFlyer() {
-    const afDevKey = 'LadcyeEpUmDJAMWDYEsZfH';
-    const appId = '6464097305';
-
-    AppsFlyerOptions appsFlyerOptions = AppsFlyerOptions(
-      afDevKey: afDevKey,
-      appId: appId,
-      showDebug: true,
-      timeToWaitForATTUserAuthorization: 15, // for iOS 14.5
-      // appInviteOneLink: oneLinkID, // Optional field
-      // disableAdvertisingIdentifier: false, // Optional field
-      // disableCollectASA: false
-    ); // Optional field
-
-    AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
-    appsflyerSdk.initSdk();
   }
 }

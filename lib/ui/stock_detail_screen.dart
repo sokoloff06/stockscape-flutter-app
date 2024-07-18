@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_adsense/adsense.dart';
 import 'package:provider/provider.dart';
+import 'package:stockscape/analytics.dart';
 import 'package:stockscape/main.dart';
 import 'package:stockscape/models/favorites.dart';
 
@@ -25,12 +26,11 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
     super.initState();
     stockDataFuture = MyApp.apiService.fetchStockData(widget.symbol);
     stockDataFuture.then((data) {
-      return FirebaseAnalytics.instance.logViewItem(
-          currency: "USD",
-          value: double.parse(data['c'].toString()),
-          items: <AnalyticsEventItem>[
-            AnalyticsEventItem(itemName: widget.symbol)
-          ]);
+      Analytics.instance.logViewItem(
+          "USD",
+          double.parse(data['c'].toString()),
+          <AnalyticsEventItem>[AnalyticsEventItem(itemName: widget.symbol)],
+          null);
     });
   }
 

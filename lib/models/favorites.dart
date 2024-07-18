@@ -3,6 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stockscape/analytics.dart';
 
 class FavoritesModel extends ChangeNotifier {
   static late FavoritesModel instance;
@@ -31,10 +32,8 @@ class FavoritesModel extends ChangeNotifier {
     _favs.add(symbol);
     String? locale = await Devicelocale.defaultLocale;
     var format = NumberFormat.simpleCurrency(locale: locale);
-    FirebaseAnalytics.instance.logPurchase(
-        currency: format.currencyName,
-        value: price,
-        items: <AnalyticsEventItem>[AnalyticsEventItem(itemName: symbol)]);
+    Analytics.instance.logPurchase(format.currencyName, price,
+        <AnalyticsEventItem>[AnalyticsEventItem(itemName: symbol)]);
     _finishTransaction();
   }
 
