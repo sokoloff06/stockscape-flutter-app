@@ -9,13 +9,15 @@ import 'firebase_options.dart';
 
 class Analytics {
   static Analytics instance = Analytics();
-  late AppsflyerSdk appsflyerSdk;
+  late AppsflyerSdk? appsflyerSdk;
 
   Future<void> logEvent(
       String eventName, Map<String, dynamic> eventParams) async {
     await FirebaseAnalytics.instance
         .logEvent(name: eventName, parameters: eventParams);
-    appsflyerSdk.logEvent(eventName, eventParams);
+    if (!kIsWeb) {
+      appsflyerSdk!.logEvent(eventName, eventParams);
+    }
   }
 
   void initSDKs() {
@@ -57,34 +59,36 @@ class Analytics {
     ); // Optional field
 
     appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
-    appsflyerSdk.initSdk();
+    appsflyerSdk!.initSdk();
   }
 
   void logViewItem(String currency, double value,
       List<AnalyticsEventItem>? items, Map<String, Object>? params) {
     FirebaseAnalytics.instance.logViewItem(
         currency: currency, value: value, items: items, parameters: params);
-
-    var eventValues = {
-      "items": items.toString(),
-      "currency": currency,
-      "value": value
-    };
-    if (params != null) eventValues.addAll(params);
-    appsflyerSdk.logEvent("af_content_view", eventValues);
+    if (!kIsWeb) {
+      var eventValues = {
+        "items": items.toString(),
+        "currency": currency,
+        "value": value
+      };
+      if (params != null) eventValues.addAll(params);
+      appsflyerSdk!.logEvent("af_content_view", eventValues);
+    }
   }
 
   void logPurchase(
       String? currency, double value, List<AnalyticsEventItem>? items) {
     FirebaseAnalytics.instance
         .logPurchase(currency: currency, value: value, items: items);
-
-    var itemNames = items?.map((e) => e.itemName).toList();
-    var eventValues = {
-      "items": itemNames,
-      "af_currency": currency,
-      "af_revenue": value
-    };
-    appsflyerSdk.logEvent("af_purchase", eventValues);
+    if (!kIsWeb) {
+      var itemNames = items?.map((e) => e.itemName).toList();
+      var eventValues = {
+        "items": itemNames,
+        "af_currency": currency,
+        "af_revenue": value
+      };
+      appsflyerSdk!.logEvent("af_purchase", eventValues);
+    }
   }
 }
