@@ -202,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
     context.push('/stocks/$symbol');
   }
 
-  Widget FavoritesToggle(String symbol, double price) {
+  Widget FavoritesToggle(String symbol, num price) {
     return Consumer<FavoritesModel>(
       builder: (
         BuildContext context,

@@ -28,11 +28,11 @@ class FavoritesModel extends ChangeNotifier {
     return _favs.contains(symbol);
   }
 
-  addToFavorites(String symbol, double price) async {
+  addToFavorites(String symbol, num price) async {
     _favs.add(symbol);
     String? locale = await Devicelocale.defaultLocale;
     var format = NumberFormat.simpleCurrency(locale: locale);
-    Analytics.instance.logPurchase(format.currencyName, price,
+    Analytics.instance.logPurchase(format.currencyName, price.toDouble(),
         <AnalyticsEventItem>[AnalyticsEventItem(itemName: symbol)]);
     _finishTransaction();
   }
