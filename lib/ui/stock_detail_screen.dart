@@ -29,7 +29,9 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
       Analytics.instance.logViewItem(
           "USD",
           double.parse(data['c'].toString()),
-          <AnalyticsEventItem>[AnalyticsEventItem(itemName: widget.symbol)],
+          <AnalyticsEventItem>[
+            AnalyticsEventItem(itemId: widget.symbol, itemName: widget.symbol)
+          ],
           null);
     });
   }
