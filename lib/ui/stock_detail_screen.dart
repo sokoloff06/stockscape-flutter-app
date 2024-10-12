@@ -1,7 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_adsense/adsense.dart';
+import 'package:google_adsense/google_adsense.dart';
 import 'package:provider/provider.dart';
 import 'package:stockscape/analytics.dart';
 import 'package:stockscape/main.dart';
@@ -99,7 +99,7 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
                         if (kIsWeb) {
                           return Align(
                               alignment: Alignment.bottomCenter,
-                              child: Adsense().adView(
+                              child: Adsense().adUnit(
                                   adSlot: "4773943862",
                                   adClient: "0556581589806023",
                                   isAdTest: MyApp.IS_DEBUG_BUILD));

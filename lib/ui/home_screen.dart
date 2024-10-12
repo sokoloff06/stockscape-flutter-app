@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_adsense/adsense.dart';
+import 'package:google_adsense/google_adsense.dart';
 import 'package:provider/provider.dart';
 import 'package:stockscape/main.dart';
 
@@ -282,15 +282,14 @@ class _HomeScreenState extends State<HomeScreen> {
           _navigateToDetailScreen(context, stock['symbol']);
         });
     if (index > 1 && index % 5 == 0 && kIsWeb) {
-      var adView = Container(
-        // constraints: const BoxConstraints(
-        //   maxWidth: 500,
-        // ),
-        child: Adsense().adView(
-            adSlot: "4773943862",
-            adClient: "0556581589806023",
-            isAdTest: MyApp.IS_DEBUG_BUILD),
-      );
+      var adView = Adsense().adUnit(
+          adSlot: "4773943862",
+          isAdTest: MyApp.IS_DEBUG_BUILD,
+          adUnitParams: <String, dynamic>{
+            AdUnitParams.AD_FORMAT: 'auto',
+            AdUnitParams.FULL_WIDTH_RESPONSIVE: true,
+          },
+          cssText: 'border: 5px solid red; display: block; padding: 20px');
       return Column(children: [adView, listTile]);
     } else {
       return listTile;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,7 +32,9 @@ Future<void> main() async {
         return FavoritesModel.getInstance();
       },
       child: const MyApp()));
-  SemanticsBinding.instance.ensureSemantics();
+  // if (kIsWeb) {
+  //   SemanticsBinding.instance.ensureSemantics();
+  // }
 }
 
 class MyApp extends StatefulWidget {
