@@ -3,7 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stockscape/analytics.dart';
+import 'package:stockscape/sdks.dart';
 
 class FavoritesModel extends ChangeNotifier {
   static late FavoritesModel instance;

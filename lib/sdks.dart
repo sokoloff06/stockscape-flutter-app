@@ -11,8 +11,8 @@ class Analytics {
   static Analytics instance = Analytics();
   late AppsflyerSdk? appsflyerSdk;
 
-  Future<void> logEvent(
-      String eventName, Map<String, dynamic> eventParams) async {
+  Future<void> logEvent(String eventName,
+      Map<String, Object> eventParams) async {
     await FirebaseAnalytics.instance
         .logEvent(name: eventName, parameters: eventParams);
     if (!kIsWeb) {
@@ -25,7 +25,7 @@ class Analytics {
     if (!kIsWeb) {
       _initAppsFlyer();
     } else {
-      Adsense().initialize("0556581589806023");
+      adSense.initialize("0556581589806023");
     }
   }
 

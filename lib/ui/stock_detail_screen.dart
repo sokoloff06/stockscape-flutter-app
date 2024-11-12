@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_adsense/google_adsense.dart';
 import 'package:provider/provider.dart';
-import 'package:stockscape/analytics.dart';
 import 'package:stockscape/main.dart';
 import 'package:stockscape/models/favorites.dart';
+import 'package:stockscape/sdks.dart';
 
 class StockDetailScreen extends StatefulWidget {
   final String symbol;
@@ -99,10 +99,10 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
                         if (kIsWeb) {
                           return Align(
                               alignment: Alignment.bottomCenter,
-                              child: Adsense().adUnit(
-                                  adSlot: "4773943862",
-                                  adClient: "0556581589806023",
-                                  isAdTest: MyApp.IS_DEBUG_BUILD));
+                              child: adSense.adUnit(
+                                  AdUnitConfiguration.displayAdUnit(
+                                      adSlot: "4773943862",
+                                      isAdTest: MyApp.IS_DEBUG_BUILD)));
                         } else {
                           return null;
                         }

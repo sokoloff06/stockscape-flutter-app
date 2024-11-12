@@ -282,14 +282,12 @@ class _HomeScreenState extends State<HomeScreen> {
           _navigateToDetailScreen(context, stock['symbol']);
         });
     if (index > 1 && index % 5 == 0 && kIsWeb) {
-      var adView = Adsense().adUnit(
+      var adView = adSense.adUnit(AdUnitConfiguration.displayAdUnit(
           adSlot: "4773943862",
           isAdTest: MyApp.IS_DEBUG_BUILD,
-          adUnitParams: <String, dynamic>{
-            AdUnitParams.AD_FORMAT: 'auto',
-            AdUnitParams.FULL_WIDTH_RESPONSIVE: true,
-          },
-          cssText: 'border: 5px solid red; display: block; padding: 20px');
+          adFormat: AdFormatType.AUTO,
+          isFullWidthResponsive: true,
+          cssText: 'border: 5px solid red; display: block; padding: 20px'));
       return Column(children: [adView, listTile]);
     } else {
       return listTile;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stockscape/analytics.dart';
+import 'package:stockscape/sdks.dart';
 import 'package:stockscape/ui/home_screen.dart';
 import 'package:stockscape/ui/stock_detail_screen.dart';
 
