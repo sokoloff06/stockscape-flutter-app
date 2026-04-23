@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1012971110099",
+    "project_id": "stockscape",
+    "storage_bucket": "stockscape.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012971110099:android:a7cd2cd1ac778edcd85e26",
+        "android_client_info": {
+          "package_name": "com.visokolov.stockscape"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1012971110099-uof2k8f2kjjvn9o0vag9876qk4mhub26.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0Qcp4SoxtN5WcdAwE_B_2gspgkiKdFCk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012971110099-uof2k8f2kjjvn9o0vag9876qk4mhub26.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

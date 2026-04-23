@@ -282,12 +282,16 @@ class _HomeScreenState extends State<HomeScreen> {
           _navigateToDetailScreen(context, stock['symbol']);
         });
     if (index > 1 && index % 5 == 0 && kIsWeb) {
-      var adView = adSense.adUnit(AdUnitConfiguration.displayAdUnit(
-          adSlot: "4773943862",
-          isAdTest: MyApp.IS_DEBUG_BUILD,
-          adFormat: AdFormatType.AUTO,
-          isFullWidthResponsive: true,
-          cssText: 'border: 5px solid red; display: block; padding: 20px'));
+      var adView = Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: adSense.adUnit(AdUnitConfiguration.displayAdUnit(
+              adSlot: "4773943862",
+              isAdTest: MyApp.IS_DEBUG_BUILD,
+              adFormat: AdFormat.AUTO,
+              isFullWidthResponsive: true)),
+        ),
+      );
       return Column(children: [adView, listTile]);
     } else {
       return listTile;
