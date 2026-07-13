@@ -1,7 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_adsense/google_adsense.dart';
 import 'package:provider/provider.dart';
 import 'package:stockscape/main.dart';
 import 'package:stockscape/models/favorites.dart';
@@ -96,16 +95,7 @@ class _StockDetailScreenState extends State<StockDetailScreen> {
                       color: Colors.red,
                       height: 600,
                       child: () {
-                        if (kIsWeb) {
-                          return Align(
-                              alignment: Alignment.bottomCenter,
-                              child: adSense.adUnit(
-                                  AdUnitConfiguration.displayAdUnit(
-                                      adSlot: "4773943862",
-                                      isAdTest: MyApp.IS_DEBUG_BUILD)));
-                        } else {
-                          return null;
-                        }
+                        return null;
                       }()),
                 ]),
               ],

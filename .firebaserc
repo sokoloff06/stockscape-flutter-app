@@ -1,5 +1,7 @@
 {
-  "projects": {},
+  "projects": {
+    "default": "stockscape"
+  },
   "targets": {
     "stockscape": {
       "hosting": {

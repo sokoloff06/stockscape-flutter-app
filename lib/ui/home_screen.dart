@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_adsense/google_adsense.dart';
 import 'package:provider/provider.dart';
 import 'package:stockscape/main.dart';
 
@@ -281,20 +280,6 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: () {
           _navigateToDetailScreen(context, stock['symbol']);
         });
-    if (index > 1 && index % 5 == 0 && kIsWeb) {
-      var adView = Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 1200),
-          child: adSense.adUnit(AdUnitConfiguration.displayAdUnit(
-              adSlot: "4773943862",
-              isAdTest: MyApp.IS_DEBUG_BUILD,
-              adFormat: AdFormat.AUTO,
-              isFullWidthResponsive: true)),
-        ),
-      );
-      return Column(children: [adView, listTile]);
-    } else {
-      return listTile;
-    }
+    return listTile;
   }
 }

@@ -36,19 +36,19 @@ class APIService {
 
   Future<List<dynamic>> fetchTopGainers() async {
     var url = Uri.parse(
-        'https://financialmodelingprep.com/api/v3/stock_market/gainers?apikey=$fmpKey');
+        'https://financialmodelingprep.com/stable/biggest-gainers?apikey=$fmpKey');
     return await makeRequest(url);
   }
 
   Future<List<dynamic>> fetchTopLosers() async {
     var url = Uri.parse(
-        'https://financialmodelingprep.com/api/v3/stock_market/losers?apikey=$fmpKey');
+        'https://financialmodelingprep.com/stable/biggest-losers?apikey=$fmpKey');
     return await makeRequest(url);
   }
 
   Future<List<dynamic>> fetchTopActive() async {
     var url = Uri.parse(
-        'https://financialmodelingprep.com/api/v3/stock_market/actives?apikey=$fmpKey');
+        'https://financialmodelingprep.com/stable/most-actives?apikey=$fmpKey');
     return await makeRequest(url);
   }
 
@@ -64,7 +64,7 @@ class APIService {
     String path =
         symbols.toString().substring(1, symbols.toString().length - 1);
     var url = Uri.parse(
-        'https://financialmodelingprep.com/api/v3/quote/$path?apikey=$fmpKey');
+        'https://financialmodelingprep.com/stable/quote/$path?apikey=$fmpKey');
     return await makeRequest(url);
   }
 }
