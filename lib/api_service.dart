@@ -36,19 +36,19 @@ class APIService {
 
   Future<List<dynamic>> fetchTopGainers() async {
     var url = Uri.parse(
-        'https://financialmodelingprep.com/api/v3/stock_market/gainers?apikey=$fmpKey');
+        'https://financialmodelingprep.com/stable/biggest-gainers?apikey=$fmpKey');
     return await makeRequest(url);
   }
 
   Future<List<dynamic>> fetchTopLosers() async {
     var url = Uri.parse(
-        'https://financialmodelingprep.com/api/v3/stock_market/losers?apikey=$fmpKey');
+        'https://financialmodelingprep.com/stable/biggest-losers?apikey=$fmpKey');
     return await makeRequest(url);
   }
 
   Future<List<dynamic>> fetchTopActive() async {
     var url = Uri.parse(
-        'https://financialmodelingprep.com/api/v3/stock_market/actives?apikey=$fmpKey');
+        'https://financialmodelingprep.com/stable/most-active?apikey=$fmpKey');
     return await makeRequest(url);
   }
 
